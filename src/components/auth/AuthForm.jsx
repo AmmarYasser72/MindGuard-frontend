@@ -10,7 +10,15 @@ export function AuthLogo({ tone = "indigo", icon = "shield", size = 80 }) {
   );
 }
 
-export function PasswordField({ label, value, onChange, placeholder = "••••••••", error }) {
+export function PasswordField({
+  label,
+  value,
+  onChange,
+  placeholder = "Enter your password",
+  error,
+  autoComplete,
+  disabled,
+}) {
   const [visible, setVisible] = useState(false);
   return (
     <Field label={label} icon="lock" error={error}>
@@ -18,9 +26,17 @@ export function PasswordField({ label, value, onChange, placeholder = "•••
         type={visible ? "text" : "password"}
         value={value}
         placeholder={placeholder}
+        autoComplete={autoComplete}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
       />
-      <button type="button" className="field-icon-button" onClick={() => setVisible((state) => !state)} aria-label="Toggle password visibility">
+      <button
+        type="button"
+        className="field-icon-button"
+        onClick={() => setVisible((state) => !state)}
+        aria-label="Toggle password visibility"
+        disabled={disabled}
+      >
         <Icon name={visible ? "eye-off" : "eye"} size={20} color="#9ca3af" />
       </button>
     </Field>
@@ -41,10 +57,10 @@ export function TextField({ label, icon, value, onChange, placeholder, type = "t
   );
 }
 
-export function SelectField({ label, icon, value, onChange, placeholder, children, error }) {
+export function SelectField({ label, icon, value, onChange, placeholder, children, error, ...props }) {
   return (
     <Field label={label} icon={icon} error={error}>
-      <select value={value} onChange={(event) => onChange(event.target.value)}>
+      <select value={value} onChange={(event) => onChange(event.target.value)} {...props}>
         <option value="">{placeholder}</option>
         {children}
       </select>
@@ -65,7 +81,12 @@ export function ErrorBanner({ error }) {
 export function SubmitButton({ children, loading, tone = "indigo" }) {
   return (
     <Button type="submit" className={`btn-full btn-${tone}`} disabled={loading}>
-      {loading ? "Loading..." : children}
+      {loading ? (
+        <>
+          <Icon name="loader-circle" size={18} color="#fff" className="spin-icon" />
+          Working...
+        </>
+      ) : children}
     </Button>
   );
 }

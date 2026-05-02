@@ -70,39 +70,138 @@ export default function DoctorSignupPage() {
   return (
     <main className="auth-page profile-auth-page">
       <section className="profile-auth-shell">
-        <button type="button" className="back-chip" onClick={() => navigate("/signup")}>
-          <Icon name="arrow-left" size={18} />
-        </button>
-        <AuthLogo tone="green" size={56} icon="stethoscope" />
-        <h1>Doctor Registration</h1>
-        <p>Join MindGuard as a healthcare professional</p>
-        <span className="doctor-badge">
-          <Icon name="badge-check" size={16} color="#059669" />
-          Healthcare Professional Account
-        </span>
+        <div className="profile-auth-header doctor-header">
+          <button type="button" className="back-chip" onClick={() => navigate("/signup")} aria-label="Back to patient signup">
+            <Icon name="arrow-left" size={18} />
+          </button>
+          <AuthLogo tone="green" size={56} icon="stethoscope" />
+          <div>
+            <span className="eyebrow">Doctor account</span>
+            <h1>Doctor Registration</h1>
+            <p>Join MindGuard as a healthcare professional.</p>
+            <span className="doctor-badge">
+              <Icon name="badge-check" size={16} color="#059669" />
+              Healthcare Professional Account
+            </span>
+          </div>
+        </div>
+
         <Card className="profile-form-card">
           <form onSubmit={onSubmit}>
+            <div className="form-title-row">
+              <div>
+                <h2>Professional details</h2>
+                <p>Your profile helps patients find the right support.</p>
+              </div>
+              <Icon name="badge-check" size={22} color="#059669" />
+            </div>
             <ErrorBanner error={error} />
             <div className="form-grid two">
-              <TextField label="First Name" icon="user" placeholder="Sarah" value={form.firstName} onChange={(value) => update("firstName", value)} />
-              <TextField label="Last Name" icon="user" placeholder="Johnson" value={form.lastName} onChange={(value) => update("lastName", value)} />
+              <TextField
+                label="First Name"
+                icon="user"
+                placeholder="Sarah"
+                value={form.firstName}
+                onChange={(value) => update("firstName", value)}
+                autoComplete="given-name"
+                disabled={authLoading}
+              />
+              <TextField
+                label="Last Name"
+                icon="user"
+                placeholder="Johnson"
+                value={form.lastName}
+                onChange={(value) => update("lastName", value)}
+                autoComplete="family-name"
+                disabled={authLoading}
+              />
             </div>
-            <TextField label="Date of Birth" icon="calendar" type="date" value={form.dateOfBirth} onChange={(value) => update("dateOfBirth", value)} />
-            <SelectField label="Gender" icon="user" value={form.gender} placeholder="Select gender" onChange={(value) => update("gender", value)}>
+            <TextField
+              label="Date of Birth"
+              icon="calendar"
+              type="date"
+              value={form.dateOfBirth}
+              onChange={(value) => update("dateOfBirth", value)}
+              autoComplete="bday"
+              disabled={authLoading}
+            />
+            <SelectField
+              label="Gender"
+              icon="user"
+              value={form.gender}
+              placeholder="Select gender"
+              onChange={(value) => update("gender", value)}
+              disabled={authLoading}
+            >
               <option value="male">Male</option>
               <option value="female">Female</option>
             </SelectField>
-            <SelectField label="Specialization" icon="brain" value={form.specialization} placeholder="Select your specialization" onChange={(value) => update("specialization", value)}>
+            <SelectField
+              label="Specialization"
+              icon="brain"
+              value={form.specialization}
+              placeholder="Select your specialization"
+              onChange={(value) => update("specialization", value)}
+              disabled={authLoading}
+            >
               {specializations.map((item) => <option key={item} value={item}>{item}</option>)}
             </SelectField>
-            <TextField label="License Number" icon="badge" placeholder="Enter your license number" value={form.licenseNumber} onChange={(value) => update("licenseNumber", value)} />
-            <TextField label="Years of Experience" icon="briefcase-business" type="number" placeholder="e.g. 5" value={form.yearsOfExperience} onChange={(value) => update("yearsOfExperience", value)} />
-            <TextField label="Professional Email" icon="mail" type="email" placeholder="dr.johnson@clinic.com" value={form.email} onChange={(value) => update("email", value)} />
-            <PasswordField label="Password" value={form.password} onChange={(value) => update("password", value)} />
-            <PasswordField label="Confirm Password" value={form.confirmPassword} onChange={(value) => update("confirmPassword", value)} />
-            <Button type="submit" className="btn-full btn-green" disabled={authLoading}>
-              {authLoading ? "Creating..." : "Create Doctor Account"}
-              <Icon name="arrow-right" size={18} color="#fff" />
+            <TextField
+              label="License Number"
+              icon="badge"
+              placeholder="Enter your license number"
+              value={form.licenseNumber}
+              onChange={(value) => update("licenseNumber", value)}
+              autoComplete="off"
+              disabled={authLoading}
+            />
+            <TextField
+              label="Years of Experience"
+              icon="briefcase-business"
+              type="number"
+              placeholder="e.g. 5"
+              value={form.yearsOfExperience}
+              onChange={(value) => update("yearsOfExperience", value)}
+              min="0"
+              disabled={authLoading}
+            />
+            <TextField
+              label="Professional Email"
+              icon="mail"
+              type="email"
+              placeholder="dr.johnson@clinic.com"
+              value={form.email}
+              onChange={(value) => update("email", value)}
+              autoComplete="email"
+              disabled={authLoading}
+            />
+            <PasswordField
+              label="Password"
+              value={form.password}
+              onChange={(value) => update("password", value)}
+              autoComplete="new-password"
+              disabled={authLoading}
+            />
+            <PasswordField
+              label="Confirm Password"
+              value={form.confirmPassword}
+              onChange={(value) => update("confirmPassword", value)}
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+              disabled={authLoading}
+            />
+            <Button type="submit" className="btn-full btn-green auth-submit" disabled={authLoading}>
+              {authLoading ? (
+                <>
+                  <Icon name="loader-circle" size={18} color="#fff" className="spin-icon" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  Create Doctor Account
+                  <Icon name="arrow-right" size={18} color="#fff" />
+                </>
+              )}
             </Button>
           </form>
           <p className="auth-switch green">
@@ -113,7 +212,7 @@ export default function DoctorSignupPage() {
           <span><Icon name="user" size={24} color="#6366f1" /></span>
           <span>
             <strong>Not a healthcare professional?</strong>
-            <small>Sign up as a Patient →</small>
+            <small>Sign up as a Patient</small>
           </span>
         </button>
       </section>

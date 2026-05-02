@@ -155,6 +155,12 @@ button:disabled {
   color: var(--text);
 }
 
+.field-control input:disabled,
+.field-control select:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
 .field-icon-button {
   display: grid;
   width: 30px;
