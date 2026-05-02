@@ -28,11 +28,12 @@ const destinations = [
   { key: "sessions", label: "Sessions", icon: "calendar-days" },
 ];
 
-const surfaceClass = "rounded-lg border border-slate-200 bg-white p-5 shadow-sm";
-const primaryButtonClass = "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-200";
-const secondaryButtonClass = "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-100";
+const primaryPurple = "var(--primary)";
+const surfaceClass = "rounded-lg border border-violet-100 bg-white p-5 shadow-sm shadow-violet-950/5";
+const primaryButtonClass = "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 text-sm font-bold text-white shadow-sm shadow-violet-950/10 transition hover:bg-[#4f46e5] focus:outline-none focus:ring-4 focus:ring-violet-200";
+const secondaryButtonClass = "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-violet-100 bg-white px-4 text-sm font-bold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-[var(--primary)] focus:outline-none focus:ring-4 focus:ring-violet-100";
 const fieldClass = "grid gap-2 text-sm font-bold text-slate-700";
-const inputClass = "min-h-12 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100";
+const inputClass = "min-h-12 w-full rounded-lg border border-violet-100 bg-white px-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-violet-400 focus:ring-4 focus:ring-violet-100";
 
 export default function DoctorDashboard() {
   const [selected, setSelected] = useState("dashboard");
@@ -69,10 +70,10 @@ export default function DoctorDashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 text-slate-950">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1440px]">
-        <aside className="sticky top-0 hidden h-screen w-28 shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-4 lg:flex">
-          <div className="mb-5 grid h-12 w-12 place-items-center self-center rounded-lg bg-slate-950 text-white">
+    <main className="min-h-screen text-slate-950" style={{ background: "linear-gradient(180deg, #f5f3ff 0%, #f8fafc 46%, #ffffff 100%)" }}>
+      <div className="flex min-h-screen w-full">
+        <aside className="sticky top-0 hidden h-screen w-28 shrink-0 flex-col border-r border-violet-100 bg-white/90 px-3 py-4 shadow-sm shadow-violet-950/5 backdrop-blur lg:flex">
+          <div className="mb-5 grid h-12 w-12 place-items-center self-center rounded-lg bg-[var(--primary)] text-white shadow-lg shadow-indigo-900/20">
             <Icon name="stethoscope" size={24} color="#fff" />
           </div>
           <nav className="grid gap-2" aria-label="Doctor navigation">
@@ -86,18 +87,18 @@ export default function DoctorDashboard() {
         </aside>
 
         <section className="min-w-0 flex-1 pb-28 lg:pb-0">
-          <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <header className="sticky top-0 z-20 border-b border-violet-100 bg-white/90 px-4 py-3 shadow-sm shadow-violet-950/5 backdrop-blur sm:px-6 lg:px-8">
+            <div className="flex w-full items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-bold uppercase text-sky-700">{greeting()}</span>
+                <span className="text-xs font-bold uppercase text-[var(--primary)]">{greeting()}</span>
                 <h1 className="text-2xl font-bold tracking-normal text-slate-950">Dr. {firstName(doctorName)}</h1>
               </div>
               <div className="flex items-center gap-2">
-                <button type="button" className="hidden rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" onClick={() => setSchedulePatient(null)}>
+                <button type="button" className="hidden rounded-lg border border-violet-100 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-[var(--primary)] sm:inline-flex" onClick={() => setSchedulePatient(null)}>
                   <Icon name="calendar-plus" size={18} />
                   New session
                 </button>
-                <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50" aria-label="Logout" title="Logout" onClick={logout}>
+                <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-violet-100 bg-white text-slate-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-[var(--primary)]" aria-label="Logout" title="Logout" onClick={logout}>
                   <Icon name="log-out" size={20} />
                 </button>
               </div>
@@ -111,11 +112,11 @@ export default function DoctorDashboard() {
         </section>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden" aria-label="Doctor navigation">
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-violet-100 bg-white/95 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(76,29,149,0.12)] backdrop-blur lg:hidden" aria-label="Doctor navigation">
         <div className="mx-auto grid max-w-2xl grid-cols-4 gap-1">
           {destinations.map((item) => (
             <button type="button" className={bottomNavClass(selected === item.key)} key={item.key} onClick={() => setSelected(item.key)}>
-              <Icon name={item.icon} size={22} />
+              <Icon name={item.icon} size={22} color={selected === item.key ? primaryPurple : "currentColor"} />
               <span>{item.label}</span>
             </button>
           ))}
@@ -143,18 +144,18 @@ function firstName(name) {
 
 function DoctorHome({ onNavigate, sessions }) {
   const segments = [
-    { label: conditionLabels.anxiety, value: doctorKpis.conditionDistribution.anxiety, color: "#0ea5e9" },
-    { label: conditionLabels.stress, value: doctorKpis.conditionDistribution.stress, color: "#f97316" },
+    { label: conditionLabels.anxiety, value: doctorKpis.conditionDistribution.anxiety, color: "#6366f1" },
+    { label: conditionLabels.stress, value: doctorKpis.conditionDistribution.stress, color: "#8b5cf6" },
     { label: conditionLabels.depression, value: doctorKpis.conditionDistribution.depression, color: "#ec4899" },
-    { label: conditionLabels.mixed, value: doctorKpis.conditionDistribution.mixed, color: "#14b8a6" },
+    { label: conditionLabels.mixed, value: doctorKpis.conditionDistribution.mixed, color: "#10b981" },
     { label: "No significant condition", value: doctorKpis.conditionDistribution.none, color: "#94a3b8" },
   ];
   const upcoming = sessions.filter((item) => item.status === "scheduled").slice(0, 6);
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-5 p-4 sm:p-6">
+    <div className="grid w-full max-w-none gap-5 p-4 sm:p-6 lg:p-8">
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <DoctorStat title="Total Patients" value={doctorKpis.totalPatients} icon="users" helper="Assigned panel" tone="sky" />
+        <DoctorStat title="Total Patients" value={doctorKpis.totalPatients} icon="users" helper="Assigned panel" tone="violet" />
         <DoctorStat title="Active Today" value={doctorKpis.activePatientsToday} icon="activity" helper="Recent check-ins" tone="emerald" />
         <DoctorStat title="Critical Count" value={doctorKpis.criticalPatients} icon="triangle-alert" helper="Needs attention" tone="red" />
         <DoctorStat title="Sessions Today" value={doctorKpis.upcomingSessionsToday} icon="calendar-days" helper="On the calendar" tone="amber" />
@@ -167,7 +168,7 @@ function DoctorHome({ onNavigate, sessions }) {
               <h2 className="text-lg font-bold text-slate-950">Condition Distribution</h2>
               <p className="text-sm text-slate-500">Current clinical mix across the assigned patient panel.</p>
             </div>
-            <button type="button" className="rounded-lg px-3 py-2 text-sm font-bold text-sky-700 transition hover:bg-sky-50">Reset</button>
+            <button type="button" className="rounded-lg px-3 py-2 text-sm font-bold text-[var(--primary)] transition hover:bg-violet-50">Reset</button>
           </div>
           <DonutChart segments={segments} />
         </section>
@@ -178,7 +179,7 @@ function DoctorHome({ onNavigate, sessions }) {
               <h2 className="text-lg font-bold text-slate-950">Upcoming Sessions</h2>
               <p className="text-sm text-slate-500">{upcoming.length ? `Next ${upcoming.length} confirmed sessions` : "No confirmed sessions for the next few hours"}</p>
             </div>
-            <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50" aria-label="Refresh sessions">
+            <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-violet-100 text-slate-600 transition hover:bg-violet-50 hover:text-[var(--primary)]" aria-label="Refresh sessions">
               <Icon name="refresh-cw" size={18} />
             </button>
           </div>
@@ -195,9 +196,9 @@ function DoctorHome({ onNavigate, sessions }) {
           <h2 className="text-lg font-bold text-slate-950">Quick Actions</h2>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
-          <button type="button" className="grid min-h-32 content-between rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md" onClick={() => onNavigate("patients")}><ActionIcon icon="users" color="#0ea5e9" bg="#e0f2fe" /><strong className="text-base text-slate-950">View All Patients</strong></button>
-          <button type="button" className="grid min-h-32 content-between rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md" onClick={() => onNavigate("monitor")}><ActionIcon icon="activity" color="#ef4444" bg="#fee2e2" /><strong className="text-base text-slate-950">Real-Time Monitor</strong></button>
-          <button type="button" className="grid min-h-32 content-between rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md" onClick={() => onNavigate("sessions")}><ActionIcon icon="calendar-plus" color="#059669" bg="#d1fae5" /><strong className="text-base text-slate-950">Schedule Session</strong></button>
+          <button type="button" className="grid min-h-32 content-between rounded-lg border border-violet-100 bg-white p-4 text-left shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md" onClick={() => onNavigate("patients")}><ActionIcon icon="users" color="#6366f1" bg="#eef2ff" /><strong className="text-base text-slate-950">View All Patients</strong></button>
+          <button type="button" className="grid min-h-32 content-between rounded-lg border border-violet-100 bg-white p-4 text-left shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-pink-200 hover:shadow-md" onClick={() => onNavigate("monitor")}><ActionIcon icon="activity" color="#ec4899" bg="#fce7f3" /><strong className="text-base text-slate-950">Real-Time Monitor</strong></button>
+          <button type="button" className="grid min-h-32 content-between rounded-lg border border-violet-100 bg-white p-4 text-left shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md" onClick={() => onNavigate("sessions")}><ActionIcon icon="calendar-plus" color="#10b981" bg="#d1fae5" /><strong className="text-base text-slate-950">Schedule Session</strong></button>
         </div>
       </section>
     </div>
@@ -206,14 +207,14 @@ function DoctorHome({ onNavigate, sessions }) {
 
 function DoctorStat({ title, value, icon, helper, tone }) {
   const styles = {
-    sky: "bg-sky-50 text-sky-700",
+    violet: "bg-violet-50 text-[var(--primary)]",
     emerald: "bg-emerald-50 text-emerald-700",
     red: "bg-red-50 text-red-700",
     amber: "bg-amber-50 text-amber-700",
   };
 
   return (
-    <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <article className="rounded-lg border border-violet-100 bg-white p-4 shadow-sm shadow-violet-950/5">
       <div className="flex items-start justify-between gap-3">
         <span className={`grid h-10 w-10 place-items-center rounded-lg ${styles[tone]}`}>
           <Icon name={icon} size={20} />
@@ -238,13 +239,13 @@ function ActionIcon({ icon, color, bg }) {
 
 function SessionSnippet({ session }) {
   return (
-    <article className="grid gap-2 rounded-lg border border-slate-100 bg-slate-50 p-4">
+    <article className="grid gap-2 rounded-lg border border-violet-100 bg-violet-50/60 p-4">
       <div className="flex items-center justify-between gap-3">
         <strong className="truncate text-sm font-bold text-slate-900">{session.patientName}</strong>
         <SeverityPill severity={session.severity} />
       </div>
       <small className="text-sm font-medium text-slate-500">{formatDateTime(session.scheduledAt)}</small>
-      <em className="w-fit rounded-lg bg-white px-3 py-1 text-xs font-bold not-italic text-sky-700 shadow-sm">{timeCountdown(session.scheduledAt)}</em>
+      <em className="w-fit rounded-lg bg-white px-3 py-1 text-xs font-bold not-italic text-[var(--primary)] shadow-sm shadow-violet-950/5">{timeCountdown(session.scheduledAt)}</em>
     </article>
   );
 }
@@ -261,7 +262,7 @@ function PatientsScreen({ onOpenSchedule }) {
   });
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-4 p-4 sm:p-6">
+    <div className="grid w-full max-w-none gap-4 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold text-slate-950">Patients</h1>
@@ -275,8 +276,8 @@ function PatientsScreen({ onOpenSchedule }) {
 
       <section className={surfaceClass}>
         <div className="grid gap-3 lg:grid-cols-[minmax(260px,1fr)_auto] lg:items-center">
-          <label className="flex min-h-12 items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 focus-within:border-sky-400 focus-within:ring-4 focus-within:ring-sky-100">
-            <Icon name="search" size={20} color="#64748b" />
+          <label className="flex min-h-12 items-center gap-3 rounded-lg border border-violet-100 bg-violet-50/50 px-3 focus-within:border-violet-400 focus-within:ring-4 focus-within:ring-violet-100">
+            <Icon name="search" size={20} color="#6366f1" />
             <input className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:text-slate-400" placeholder="Search patients" value={query} onChange={(event) => setQuery(event.target.value)} />
           </label>
           <div className="flex gap-2 overflow-x-auto">
@@ -310,9 +311,9 @@ function PatientsScreen({ onOpenSchedule }) {
 
 function PatientCard({ patient, expanded, onToggle, onProfile, onSchedule }) {
   return (
-    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <button type="button" className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 p-4 text-left transition hover:bg-slate-50" onClick={onToggle}>
-        <span className="grid h-12 w-12 place-items-center rounded-lg bg-slate-900 text-sm font-bold text-white">{patient.firstName.charAt(0)}{patient.lastName.charAt(0)}</span>
+    <article className="overflow-hidden rounded-lg border border-violet-100 bg-white shadow-sm shadow-violet-950/5">
+      <button type="button" className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 p-4 text-left transition hover:bg-violet-50/60" onClick={onToggle}>
+        <span className="grid h-12 w-12 place-items-center rounded-lg bg-[var(--primary)] text-sm font-bold text-white shadow-sm shadow-violet-950/10">{patient.firstName.charAt(0)}{patient.lastName.charAt(0)}</span>
         <span className="min-w-0">
           <span className="flex flex-wrap items-center gap-2">
             <strong className="truncate text-base font-bold text-slate-950">{patientName(patient)} <span className="text-slate-500">{ageGender(patient)}</span></strong>
@@ -324,13 +325,13 @@ function PatientCard({ patient, expanded, onToggle, onProfile, onSchedule }) {
         <Icon name={expanded ? "chevron-up" : "chevron-down"} size={20} color="#64748b" />
       </button>
       {expanded ? (
-        <div className="grid gap-4 border-t border-slate-100 bg-slate-50 p-4">
+        <div className="grid gap-4 border-t border-violet-100 bg-violet-50/50 p-4">
           <div className="grid gap-3 md:grid-cols-3">
-            <MetricBlock label="Latest mood" value={`${patient.mood}/100`} note={`From ${Math.round(patient.trend.at(-1))} last week`} tone="sky" />
+            <MetricBlock label="Latest mood" value={`${patient.mood}/100`} note={`From ${Math.round(patient.trend.at(-1))} last week`} tone="violet" />
             <MetricBlock label="HRV" value={`${patient.hrv.toFixed(0)}ms`} note={`${Math.abs(patient.hrvDeviation).toFixed(0)}% from baseline`} tone="red" />
             <MetricBlock label="Sleep" value={`${Math.round(patient.sleep * 100)}%`} note="Efficiency last night" tone="emerald" />
           </div>
-          <p className="rounded-lg border border-slate-200 bg-white p-3 text-sm font-medium text-slate-600">
+          <p className="rounded-lg border border-violet-100 bg-white p-3 text-sm font-medium text-slate-600">
             <strong className="text-slate-900">Last journal:</strong> {patient.journal ? `"${patient.journal.slice(0, 110)}..."` : "No recent entry"}
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -345,13 +346,13 @@ function PatientCard({ patient, expanded, onToggle, onProfile, onSchedule }) {
 
 function MetricBlock({ label, value, note, tone }) {
   const styles = {
-    sky: "bg-sky-50 text-sky-700",
+    violet: "bg-violet-50 text-[var(--primary)]",
     red: "bg-red-50 text-red-700",
     emerald: "bg-emerald-50 text-emerald-700",
   };
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="rounded-lg border border-violet-100 bg-white p-4">
       <span className="text-xs font-bold uppercase text-slate-500">{label}</span>
       <strong className={`mt-2 block w-fit rounded-lg px-2 py-1 text-lg font-bold ${styles[tone]}`}>{value}</strong>
       <small className="mt-2 block text-xs font-semibold text-slate-500">{note}</small>
@@ -371,7 +372,7 @@ function SeverityPill({ severity }) {
 }
 
 function ConditionPill({ condition }) {
-  return <span className="inline-flex min-h-6 items-center rounded-lg bg-sky-50 px-2 text-xs font-bold text-sky-700 ring-1 ring-sky-100">{conditionLabels[condition]}</span>;
+  return <span className="inline-flex min-h-6 items-center rounded-lg bg-violet-50 px-2 text-xs font-bold text-[var(--primary)] ring-1 ring-violet-100">{conditionLabels[condition]}</span>;
 }
 
 function PatientDetails({ patient, onClose, onSchedule }) {
@@ -412,7 +413,7 @@ function PatientDetails({ patient, onClose, onSchedule }) {
         </div>
 
         <section className={surfaceClass}>
-          <LineChart data={patient.trend} color="#0ea5e9" />
+          <LineChart data={patient.trend} color="#6366f1" />
         </section>
         <section className={`${surfaceClass} grid gap-3`}>
           {["Recent activities", "Mood by date", "Anxiety-dominant"].map((item, index) => <p className="flex items-center gap-3 text-sm font-semibold text-slate-600" key={item}><Icon name={["calendar", "clock", "edit"][index]} size={20} color="#64748b" />{item}</p>)}
@@ -431,15 +432,15 @@ function MonitorScreen({ onOpenSchedule }) {
   const moderate = wrappers.filter((item) => item.summary.severity === "moderate");
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-4 p-4 sm:p-6">
+    <div className="grid w-full max-w-none gap-4 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold text-slate-950">Realtime Monitor</h1>
           <span className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-slate-500"><b className="h-2 w-2 rounded-full bg-emerald-500" /> Live stream - Every 30s</span>
         </div>
         <div className="flex gap-2">
-          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600"><Icon name="sliders-horizontal" size={20} /></button>
-          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600"><Icon name="more-horizontal" size={20} /></button>
+          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-violet-100 bg-white text-slate-600 transition hover:bg-violet-50 hover:text-[var(--primary)]"><Icon name="sliders-horizontal" size={20} /></button>
+          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-violet-100 bg-white text-slate-600 transition hover:bg-violet-50 hover:text-[var(--primary)]"><Icon name="more-horizontal" size={20} /></button>
         </div>
       </div>
 
@@ -451,7 +452,7 @@ function MonitorScreen({ onOpenSchedule }) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700"><Icon name="podcast" size={16} color="#047857" />Live connection</span>
-        <button type="button" className="rounded-lg px-3 py-2 text-sm font-bold text-sky-700 hover:bg-sky-50">Refresh now</button>
+        <button type="button" className="rounded-lg px-3 py-2 text-sm font-bold text-[var(--primary)] hover:bg-violet-50">Refresh now</button>
       </div>
 
       <AlertSection title="High-risk alerts" tone="critical" items={critical} onOpenSchedule={onOpenSchedule} />
@@ -495,7 +496,7 @@ function SessionsScreen({ sessions, onOpenSchedule }) {
   const shown = tab === "upcoming" ? upcoming : past;
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-4 p-4 sm:p-6">
+    <div className="grid w-full max-w-none gap-4 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold text-slate-950">Sessions</h1>
@@ -504,7 +505,7 @@ function SessionsScreen({ sessions, onOpenSchedule }) {
         <button type="button" className={primaryButtonClass} onClick={onOpenSchedule}><Icon name="plus" size={20} color="#fff" />New session</button>
       </header>
 
-      <div className="grid max-w-md grid-cols-2 rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+      <div className="grid max-w-md grid-cols-2 rounded-lg border border-violet-100 bg-white p-1 shadow-sm shadow-violet-950/5">
         <button type="button" className={tabButtonClass(tab === "upcoming")} onClick={() => setTab("upcoming")}>Upcoming</button>
         <button type="button" className={tabButtonClass(tab === "past")} onClick={() => setTab("past")}>Past</button>
       </div>
@@ -519,17 +520,17 @@ function SessionsScreen({ sessions, onOpenSchedule }) {
 function SessionCard({ session, isPast }) {
   const { showToast } = useToast();
   return (
-    <article className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <article className="grid gap-4 rounded-lg border border-violet-100 bg-white p-5 shadow-sm shadow-violet-950/5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-3xl font-bold text-slate-950">{formatTime(session.scheduledAt)}</h2>
-          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-bold text-slate-700"><Icon name={sessionTypeIcon(session.type)} size={18} /> {session.patientName} <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs text-slate-500">{shortReason(session.reason)}</span></p>
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-bold text-slate-700"><Icon name={sessionTypeIcon(session.type)} size={18} /> {session.patientName} <span className="rounded-lg bg-violet-50 px-2 py-1 text-xs text-[var(--primary)]">{shortReason(session.reason)}</span></p>
         </div>
         {session.severity ? <SeverityPill severity={session.severity} /> : null}
       </div>
       <div className="flex flex-wrap gap-2">
         {session.condition ? <ConditionPill condition={session.condition} /> : null}
-        <span className="inline-flex min-h-6 items-center rounded-lg bg-slate-100 px-2 text-xs font-bold text-slate-600">{session.duration} min</span>
+        <span className="inline-flex min-h-6 items-center rounded-lg bg-violet-50 px-2 text-xs font-bold text-[var(--primary)]">{session.duration} min</span>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <button type="button" className={primaryButtonClass} onClick={() => showToast(isPast ? "Review - Coming soon" : "Session started")}>{isPast ? "Review" : "Start"}</button>
@@ -568,23 +569,23 @@ function ScheduleSessionModal({ patient, onClose, onCreate }) {
 }
 
 function EmptyPanel({ message }) {
-  return <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm font-semibold text-slate-500">{message}</div>;
+  return <div className="rounded-lg border border-dashed border-violet-200 bg-white p-8 text-center text-sm font-semibold text-slate-500">{message}</div>;
 }
 
 function railButtonClass(active) {
-  return `grid min-h-20 justify-items-center gap-2 rounded-lg px-2 py-3 text-xs font-bold transition ${active ? "bg-slate-950 text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"}`;
+  return `grid min-h-20 justify-items-center gap-2 rounded-lg px-2 py-3 text-xs font-bold transition ${active ? "bg-[var(--primary)] text-white shadow-sm shadow-indigo-900/15" : "text-slate-500 hover:bg-violet-50 hover:text-[var(--primary)]"}`;
 }
 
 function bottomNavClass(active) {
-  return `grid min-h-14 justify-items-center gap-1 rounded-lg px-2 py-2 text-[11px] font-bold transition ${active ? "bg-sky-50 text-sky-700" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`;
+  return `grid min-h-14 justify-items-center gap-1 rounded-lg px-2 py-2 text-[11px] font-bold transition ${active ? "bg-[rgba(99,102,241,0.1)] text-[var(--primary)] shadow-sm shadow-violet-950/5" : "text-slate-500 hover:bg-violet-50 hover:text-[var(--primary)]"}`;
 }
 
 function filterButtonClass(active) {
-  return `h-10 shrink-0 rounded-lg px-4 text-sm font-bold transition ${active ? "bg-slate-950 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"}`;
+  return `h-10 shrink-0 rounded-lg px-4 text-sm font-bold transition ${active ? "bg-[var(--primary)] text-white shadow-sm shadow-violet-950/10" : "border border-violet-100 bg-white text-slate-600 hover:bg-violet-50 hover:text-[var(--primary)]"}`;
 }
 
 function tabButtonClass(active) {
-  return `min-h-10 rounded-lg px-3 text-sm font-bold transition ${active ? "bg-slate-950 text-white shadow-sm" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`;
+  return `min-h-10 rounded-lg px-3 text-sm font-bold transition ${active ? "bg-[var(--primary)] text-white shadow-sm shadow-violet-950/10" : "text-slate-500 hover:bg-violet-50 hover:text-[var(--primary)]"}`;
 }
 
 function formatDateTime(date) {
