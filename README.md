@@ -1,80 +1,105 @@
-# 🧠 MindGuard Frontend (React)
+# MindGuard React Frontend
 
-MindGuard is a web-based mental health platform built using React and tailwind CSS, designed to provide users with an interactive, scalable, and structured interface for mental health support, chatbot interaction, and doctor monitoring
+MindGuard is a React-based mental health support interface for patients and doctors. The application includes onboarding, authentication, patient wellness dashboards, analytics views, guided wellness tools, a NOVA chat experience, and doctor monitoring screens.
 
-## 🚀 Features
+This repository contains the frontend application built with Vite, React, and Tailwind CSS.
 
-- Authentication system 
-- Real-time chatbot integration 
-- Doctor module 
-- Dashboard with dynamic data visualization
-- Reusable component-based architecture
-- API integration with backend services
-- Error handling with loading and state management
+## Features
 
-## 🏗️ Tech Stack
+- Patient and doctor authentication flows
+- Demo login and local fallback storage for development
+- Patient dashboard with mood tracking, wellness metrics, goals, and recent activity
+- Analytics screens for mood, stress, anxiety, sleep, and depression insights
+- patient chat with WebSocket echo fallback behavior
+- Doctor dashboard with patient monitoring, sessions, and care workflow screens
+- Reusable UI primitives, icons, charts, cards, modals, and toast notifications
+- Responsive mobile-first layouts with a bottom navigation experience
 
-- React
-- javaScript
-- Axios / Fetch API
-- Socket.IO
-- React Router
+## Tech Stack
 
----
+- React 19
+- Tailwind CSS 
+- JavaScript 
+- Fetch API
+- WebSocket API
 
-## 📁 Project Structure
+## Project Structure
 
-```bash
+```text
 src/
-├── assets/        # Images, icons, static files
-├── components/    # Reusable UI components
-├── pages/         # Application pages
-├── features/      # Feature-based modules (auth, chatbot, doctor)
-├── services/      # API calls
-├── hooks/         # Custom hooks
-├── context/       # Global state
-├── utils/         # Helper functions
-├── router/        # Routing configuration
-├── App.tsx        # Root component
-└── main.tsx       # Entry point
+  App.jsx                         Route selection and app providers
+  main.jsx                        React entry point
+  components/
+    auth/                         Authentication form components
+    common/                       Shared UI primitives, icons, charts, modal, toast
+    patient/                      Patient-specific reusable cards and layouts
+  data/                           Static dashboard, analytics, onboarding, and doctor data
+  hooks/                          Auth and router context hooks
+  pages/
+    auth/                         Splash, onboarding, sign in, signup pages
+    doctor/                       Doctor dashboard
+    patient/                      Patient dashboard, analytics, chat, and tool pages
+  services/                       Auth, chat, and storage services
+  styles/                         Theme tokens and application styles
 ```
 
----
+## Getting Started
 
-## ⚙️ Installation
+### Prerequisites
+
+- Node.js 18 or newer
+- npm
+
+### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/AmmarYasser72/MindGuard-frontend.git
-
-# Navigate to project directory
 cd MindGuard-frontend
-
-# Install dependencies
 npm install
+```
 
-# Run development server
+### Development
+
+```bash
 npm run dev
 ```
 
----
+The Vite development server runs on:
+
+```text
+http://localhost:5173
+```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Available Scripts
+
+```text
+npm run dev        Start the local Vite development server
+npm run build      Create a production build in dist/
+npm run preview    Preview the production build locally
+npm run lint       Run ESLint across the project
+npm run deploy     Deploy the dist/ folder with gh-pages
+```
 
 
-## 🔌 API Integration
+## Demo Accounts
 
-- /api/auth/register
-- /api/auth/login
-- /api/user/profile
+```text
+Patient: patient@demo.com / demo123
+Doctor:  doctor@demo.com  / demo123
+```
 
-## ⚠️ Current Status
+## License
 
-- Frontend cleaned and refactored
-- Authentication integrated
-- API integration started
-- Doctor module not finished
-- Chatbot partially implemented
-
-## 📄 License
-
-graduation project by Ammar Yasser
-
+Graduation project by Ammar Yasser.

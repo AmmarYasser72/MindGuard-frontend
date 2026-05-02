@@ -15,7 +15,8 @@ import {
 } from "../../data/patientData.js";
 import AnalyticsPage from "./AnalyticsPage.jsx";
 
-const panelClass = "rounded-lg border border-slate-200 bg-white p-5 shadow-sm";
+const primaryPurple = "var(--primary)";
+const panelClass = "rounded-lg border border-violet-100 bg-white p-5 shadow-sm shadow-violet-950/5";
 const iconButtonClass = "grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60";
 
 export default function PatientDashboard() {
@@ -25,22 +26,22 @@ export default function PatientDashboard() {
   const email = user?.email || "Patient";
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-screen text-slate-950" style={{ background: "linear-gradient(180deg, #f5f3ff 0%, #f8fafc 46%, #ffffff 100%)" }}>
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 pb-28 pt-4 sm:px-6 lg:px-8">
         {tab === "dashboard" ? <DashboardContent email={email} /> : <AnalyticsPage />}
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur" aria-label="Patient navigation">
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-violet-100 bg-white/95 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(76,29,149,0.12)] backdrop-blur" aria-label="Patient navigation">
         <div className="mx-auto grid max-w-md grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <button type="button" className={bottomNavClass(tab === "dashboard")} onClick={() => setTab("dashboard")}>
-            <Icon name="home" size={22} />
+          <button type="button" className={bottomNavClass(tab === "dashboard")} onClick={() => setTab("dashboard")} aria-current={tab === "dashboard" ? "page" : undefined}>
+            <Icon name="dashboard" size={22} color={primaryPurple} />
             <span>Dashboard</span>
           </button>
-          <button type="button" className="grid h-14 w-14 place-items-center rounded-full bg-slate-950 text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-sky-200" onClick={() => navigate(`/patient-chat/${encodeURIComponent(email)}`)} aria-label="Chat with NOVA">
+          <button type="button" className="grid h-14 w-14 place-items-center rounded-full bg-[var(--primary)] text-white shadow-lg shadow-indigo-900/20 transition hover:-translate-y-0.5 hover:bg-[#4f46e5] focus:outline-none focus:ring-4 focus:ring-violet-200" onClick={() => navigate(`/patient-chat/${encodeURIComponent(email)}`)} aria-label="Chat with NOVA">
             <Icon name="message-circle" size={26} color="#fff" />
           </button>
-          <button type="button" className={bottomNavClass(tab === "analytics")} onClick={() => setTab("analytics")}>
-            <Icon name="bar-chart-3" size={22} />
+          <button type="button" className={bottomNavClass(tab === "analytics")} onClick={() => setTab("analytics")} aria-current={tab === "analytics" ? "page" : undefined}>
+            <Icon name="analytics" size={22} color={primaryPurple} />
             <span>Analytics</span>
           </button>
         </div>
@@ -71,12 +72,12 @@ function DashboardContent({ email }) {
 
   return (
     <section className="mx-auto w-full max-w-7xl space-y-5">
-      <header className="overflow-hidden rounded-lg bg-slate-950 text-white shadow-sm">
+      <header className="overflow-hidden rounded-lg text-white shadow-sm shadow-indigo-950/10" style={{ background: "linear-gradient(135deg, #4a3b8c 0%, #6366f1 58%, #8b5cf6 100%)" }}>
         <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-end">
           <div className="space-y-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="text-sm font-semibold uppercase text-cyan-200">{greeting()}</span>
+                <span className="text-sm font-semibold uppercase text-violet-100">{greeting()}</span>
                 <h1 className="mt-1 text-3xl font-bold tracking-normal sm:text-4xl">{firstName()}</h1>
               </div>
               <div className="flex gap-2">
@@ -92,8 +93,8 @@ function DashboardContent({ email }) {
               </div>
             </div>
             <div className="max-w-2xl space-y-2">
-              <p className="text-sm font-medium text-slate-300">Your care plan is steady today. Keep the next step small and visible.</p>
-              <div className="flex flex-wrap gap-2 text-xs font-semibold text-slate-200">
+              <p className="text-sm font-medium text-violet-100">Your care plan is steady today. Keep the next step small and visible.</p>
+              <div className="flex flex-wrap gap-2 text-xs font-semibold text-violet-50">
                 <span className="rounded-lg border border-white/10 bg-white/10 px-3 py-2">Weekly mood {average}%</span>
                 <span className="rounded-lg border border-white/10 bg-white/10 px-3 py-2">{completedGoals}/{dailyGoals.length} goals on track</span>
                 <span className="rounded-lg border border-white/10 bg-white/10 px-3 py-2">Next check-in today</span>
@@ -103,7 +104,7 @@ function DashboardContent({ email }) {
           <div className="grid grid-cols-3 gap-2">
             {wellnessMetrics.slice(0, 3).map((metric) => (
               <div className="rounded-lg border border-white/10 bg-white/10 p-3" key={metric.label}>
-                <span className="text-xs font-semibold text-slate-300">{metric.label}</span>
+                <span className="text-xs font-semibold text-violet-100">{metric.label}</span>
                 <strong className="mt-2 block text-2xl font-bold">{metric.value}</strong>
               </div>
             ))}
@@ -113,9 +114,9 @@ function DashboardContent({ email }) {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
         <div className="space-y-5">
-          <section className={`${panelClass} border-sky-100 bg-sky-50/70`}>
+          <section className={`${panelClass} border-violet-100 bg-violet-50/80`}>
             <div className="flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-white text-pink-600 shadow-sm">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-white text-[var(--primary)] shadow-sm">
                 <Icon name="heart" size={18} />
               </span>
               <div>
@@ -127,16 +128,16 @@ function DashboardContent({ email }) {
               {moodOptions.map((mood, index) => {
                 const active = selectedMood === index;
                 return (
-                  <button type="button" className={`min-h-24 rounded-lg border p-3 text-center transition focus:outline-none focus:ring-4 focus:ring-sky-200 ${active ? "border-sky-500 bg-white shadow-sm" : "border-slate-200 bg-white/70 hover:border-sky-300 hover:bg-white"}`} key={`${mood.label}-${index}`} onClick={() => setSelectedMood(index)}>
+                  <button type="button" className={`min-h-24 rounded-lg border p-3 text-center transition focus:outline-none focus:ring-4 focus:ring-violet-200 ${active ? "border-[var(--primary)] bg-white shadow-sm shadow-violet-950/10" : "border-violet-100 bg-white/70 hover:border-violet-300 hover:bg-white"}`} key={`${mood.label}-${index}`} onClick={() => setSelectedMood(index)}>
                     <span className="block text-3xl leading-none">{mood.emoji}</span>
-                    <small className={`mt-3 block text-xs font-bold ${active ? "text-sky-700" : "text-slate-500"}`}>{mood.label}</small>
+                    <small className={`mt-3 block text-xs font-bold ${active ? "text-[var(--primary)]" : "text-slate-500"}`}>{mood.label}</small>
                   </button>
                 );
               })}
             </div>
             <button
               type="button"
-              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-sky-600 text-sm font-bold text-white shadow-sm transition hover:bg-sky-700 disabled:bg-slate-300"
+              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--primary)] text-sm font-bold text-white shadow-sm shadow-violet-950/10 transition hover:bg-[#4f46e5] disabled:bg-slate-300"
               disabled={selectedMood === null}
               onClick={() => showToast(`Mood "${moodOptions[selectedMood].label}" recorded!`, "success")}
             >
@@ -149,11 +150,11 @@ function DashboardContent({ email }) {
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-bold text-slate-950">Weekly Mood Journey</h2>
-                <p className="text-sm text-slate-500">Average mood this week: <strong className="text-emerald-600">{average}%</strong></p>
+                <p className="text-sm text-slate-500">Average mood this week: <strong className="text-[var(--primary)]">{average}%</strong></p>
               </div>
-              <span className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">Stable</span>
+              <span className="rounded-lg bg-violet-50 px-3 py-2 text-xs font-bold text-[var(--primary)]">Stable</span>
             </div>
-            <LineChart data={weeklyMood.map((item) => item.value * 100)} color="#10b981" labels={weeklyMood.map((item) => item.day)} />
+            <LineChart data={weeklyMood.map((item) => item.value * 100)} color="#6366f1" labels={weeklyMood.map((item) => item.day)} />
           </section>
 
           <section className="space-y-3">
@@ -163,7 +164,7 @@ function DashboardContent({ email }) {
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {quickActions.map((action) => (
-                <button type="button" className="group grid min-h-32 content-between rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-sky-100" key={action.label} onClick={() => navigate(action.path)}>
+                <button type="button" className="group grid min-h-32 content-between rounded-lg border border-violet-100 bg-white p-4 text-left shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-violet-100" key={action.label} onClick={() => navigate(action.path)}>
                   <span className="grid h-10 w-10 place-items-center rounded-lg" style={{ backgroundColor: action.bg }}>
                     <Icon name={action.icon} size={20} color={action.color} />
                   </span>
@@ -177,7 +178,7 @@ function DashboardContent({ email }) {
         <aside className="space-y-5">
           <section className={panelClass}>
             <div className="mb-4 flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-100 text-slate-600">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-violet-50 text-[var(--primary)]">
                 <Icon name="calendar" size={18} />
               </span>
               <h2 className="text-base font-bold text-slate-950">Today's Wellness Summary</h2>
@@ -192,7 +193,7 @@ function DashboardContent({ email }) {
           <section className={panelClass}>
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-base font-bold text-slate-950">Daily Goals</h2>
-              <button type="button" className="rounded-lg px-2 py-1 text-sm font-bold text-sky-700 hover:bg-sky-50" onClick={() => navigate("/daily-goals")}>View all</button>
+              <button type="button" className="rounded-lg px-2 py-1 text-sm font-bold text-[var(--primary)] hover:bg-violet-50" onClick={() => navigate("/daily-goals")}>View all</button>
             </div>
             <div className="space-y-4">
               {dailyGoals.map((goal) => <GoalRow goal={goal} key={goal.title} />)}
@@ -202,7 +203,7 @@ function DashboardContent({ email }) {
           <section className={panelClass}>
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-base font-bold text-slate-950">Recent Activity</h2>
-              <button type="button" className="rounded-lg px-2 py-1 text-sm font-bold text-sky-700 hover:bg-sky-50" onClick={() => navigate("/recent-activity")}>See all</button>
+              <button type="button" className="rounded-lg px-2 py-1 text-sm font-bold text-[var(--primary)] hover:bg-violet-50" onClick={() => navigate("/recent-activity")}>See all</button>
             </div>
             <div className="space-y-3">
               {recentActivities.map((activity) => (
@@ -249,7 +250,7 @@ function GoalRow({ goal }) {
 }
 
 function bottomNavClass(active) {
-  return `grid min-h-14 min-w-0 justify-items-center gap-1 rounded-lg px-4 py-2 text-xs font-bold transition ${active ? "bg-sky-50 text-sky-700" : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`;
+  return `grid min-h-14 min-w-0 justify-items-center gap-1 rounded-lg px-4 py-2 text-xs font-bold transition ${active ? "bg-[rgba(99,102,241,0.1)] text-[var(--primary)] shadow-sm shadow-violet-950/5" : "text-slate-500 hover:bg-violet-50 hover:text-[var(--primary)]"}`;
 }
 
 function progressColor(progress) {
