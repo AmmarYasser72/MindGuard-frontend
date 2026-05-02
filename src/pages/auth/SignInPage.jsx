@@ -61,7 +61,7 @@ export default function SignInPage() {
           <div className="auth-benefit-grid" aria-label="Sign in benefits">
             <span>
               <Icon name="timer" size={18} color="#0f766e" />
-              Under 5 sec
+             Fast Recovery
             </span>
             <span>
               <Icon name="shield-check" size={18} color="#4f46e5" />
@@ -144,11 +144,6 @@ export default function SignInPage() {
             ))}
           </Card>
 
-          <div className="trust-row" aria-label="Compliance notes">
-            <span>HIPAA Compliant</span>
-            <span>End-to-End Encrypted</span>
-            <span>GDPR Ready</span>
-          </div>
         </div>
       </section>
     </main>
