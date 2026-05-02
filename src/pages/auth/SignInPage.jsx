@@ -76,8 +76,9 @@ export default function SignInPage() {
               <div className="form-title-row">
                 <div>
                   <h2>Sign in</h2>
-                  <p>Enter your email and password.</p>
+                  <p>Use your email and password.</p>
                 </div>
+                <Icon name="log-in" size={22} color="#6366f1" />
               </div>
               <ErrorBanner error={error} />
               <TextField

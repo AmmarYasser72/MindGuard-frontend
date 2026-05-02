@@ -20,27 +20,45 @@ MindGuard is a web-based mental health platform built using React and tailwind C
 - Socket.IO
 - React Router
 
+---
+
 ## 📁 Project Structure
 
+```bash
 src/
-│── assets/
-│── components/
-│── pages/
-│── features/
-│── services/
-│── hooks/
-│── context/
-│── utils/
-│── router/
-│── App.tsx
-│── main.tsx
+├── assets/        # Images, icons, static files
+├── components/    # Reusable UI components
+├── pages/         # Application pages
+├── features/      # Feature-based modules (auth, chatbot, doctor)
+├── services/      # API calls
+├── hooks/         # Custom hooks
+├── context/       # Global state
+├── utils/         # Helper functions
+├── router/        # Routing configuration
+├── App.tsx        # Root component
+└── main.tsx       # Entry point
+```
+
+---
 
 ## ⚙️ Installation
 
+```bash
+# Clone the repository
 git clone https://github.com/AmmarYasser72/MindGuard-frontend.git
+
+# Navigate to project directory
 cd MindGuard-frontend
+
+# Install dependencies
 npm install
+
+# Run development server
 npm run dev
+```
+
+---
+
 
 ## 🔌 API Integration
 
@@ -58,4 +76,5 @@ npm run dev
 
 ## 📄 License
 
-Educational project.
+graduation project by Ammar Yasser
+
