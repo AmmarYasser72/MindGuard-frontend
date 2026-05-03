@@ -1,19 +1,10 @@
 import Icon from "../../components/common/Icon.jsx";
-import { Card } from "../../components/common/Primitives.jsx";
 import { useRouter } from "../../hooks/useRouter.js";
 import { useToast } from "../../components/common/Toast.jsx";
-import {
-  ActionGrid,
-  ActivityRows,
-  AppTopBar,
-  BreakdownGrid,
-  DaysRow,
-  GoalList,
-  HeaderCard,
-  ItemList,
-  JournalEntries,
-  StatGrid,
-} from "../../components/patient/PatientCards.jsx";
+import ActionGrid from "../../components/patient/ActionGrid.jsx";
+import AppTopBar from "../../components/patient/AppTopBar.jsx";
+import HeaderCard from "../../components/patient/HeaderCard.jsx";
+import ToolSection from "./ToolSection.jsx";
 
 export default function PatientToolPage({ config }) {
   const { navigate } = useRouter();
@@ -39,35 +30,5 @@ export default function PatientToolPage({ config }) {
         ))}
       </div>
     </main>
-  );
-}
-
-function ToolSection({ section, color, onAction }) {
-  return (
-    <section className="tool-section">
-      <h2>{section.title}</h2>
-      {section.type === "list" ? <ItemList items={section.items} color={color} onItem={onAction} /> : null}
-      {section.type === "stats" ? <Card><StatGrid items={section.items} /></Card> : null}
-      {section.type === "journal" ? <JournalEntries items={section.items} onItem={onAction} /> : null}
-      {section.type === "goals" ? <GoalList items={section.items} onItem={onAction} /> : null}
-      {section.type === "activity" ? <ActivityRows items={section.items} onItem={onAction} /> : null}
-      {section.type === "breakdown" ? <Card><BreakdownGrid items={section.items} /></Card> : null}
-      {section.type === "days" ? <Card><DaysRow days={section.days} active={section.active} /></Card> : null}
-      {section.type === "sleep" ? (
-        <div className="stack-list">
-          {section.items.map((item) => (
-            <button type="button" className="sleep-entry" key={item.date} onClick={() => onAction({ toast: "Sleep details - Coming soon" })}>
-              <span className="metric-icon"><Icon name="moon" size={20} color="#ec4899" /></span>
-              <span>
-                <small>{item.date}</small>
-                <strong>{item.duration} <em>{item.quality}</em></strong>
-                <span>Bedtime: {item.bedtime}</span>
-              </span>
-              <Icon name="chevron-right" size={16} color="#9ca3af" />
-            </button>
-          ))}
-        </div>
-      ) : null}
-    </section>
   );
 }
