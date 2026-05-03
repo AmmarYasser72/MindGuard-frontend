@@ -1,7 +1,12 @@
 import { useState } from "react";
 import Icon from "../../components/common/Icon.jsx";
-import { Button, Card } from "../../components/common/Primitives.jsx";
-import { AuthLogo, ErrorBanner, PasswordField, SelectField, TextField } from "../../components/auth/AuthForm.jsx";
+import Button from "../../components/common/Button.jsx";
+import Card from "../../components/common/Card.jsx";
+import AuthLogo from "../../components/auth/AuthLogo.jsx";
+import ErrorBanner from "../../components/auth/ErrorBanner.jsx";
+import PasswordField from "../../components/auth/PasswordField.jsx";
+import SelectField from "../../components/auth/SelectField.jsx";
+import TextField from "../../components/auth/TextField.jsx";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useRouter } from "../../hooks/useRouter.js";
 

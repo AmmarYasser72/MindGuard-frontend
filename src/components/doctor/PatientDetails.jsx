@@ -1,11 +1,11 @@
 import { useState } from "react";
-import LineChart from "../../../components/common/LineChart.jsx";
-import { Modal } from "../../../components/common/Modal.jsx";
-import Icon from "../../../components/common/Icon.jsx";
+import LineChart from "../common/LineChart.jsx";
+import { Modal } from "../common/Modal.jsx";
+import Icon from "../common/Icon.jsx";
 import {
   lastSeenLabel,
   patientName,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import ConditionPill from "./ConditionPill.jsx";
 import SeverityPill from "./SeverityPill.jsx";
 import { primaryButtonClass, surfaceClass, tabButtonClass } from "./dashboardShared.js";

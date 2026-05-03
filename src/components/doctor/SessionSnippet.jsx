@@ -1,4 +1,4 @@
-import { timeCountdown } from "../../../data/doctorData.js";
+import { timeCountdown } from "../../data/doctorData.js";
 import { formatDateTime } from "./dashboardShared.js";
 import SeverityPill from "./SeverityPill.jsx";
 

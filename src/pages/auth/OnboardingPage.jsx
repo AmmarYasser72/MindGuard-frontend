@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "../../components/common/Icon.jsx";
-import { Button } from "../../components/common/Primitives.jsx";
+import Button from "../../components/common/Button.jsx";
 import { onboardingSlides } from "../../data/onboardingData.js";
 import { useRouter } from "../../hooks/useRouter.js";
 

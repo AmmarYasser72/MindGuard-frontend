@@ -1,9 +1,9 @@
-import Icon from "../../../components/common/Icon.jsx";
-import DonutChart from "../../../components/common/DonutChart.jsx";
+import Icon from "../common/Icon.jsx";
+import DonutChart from "../common/DonutChart.jsx";
 import {
   conditionLabels,
   doctorKpis,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import ActionIcon from "./ActionIcon.jsx";
 import DoctorStat from "./DoctorStat.jsx";
 import EmptyPanel from "./EmptyPanel.jsx";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Icon from "../../../components/common/Icon.jsx";
+import Icon from "../common/Icon.jsx";
 import EmptyPanel from "./EmptyPanel.jsx";
 import SessionCard from "./SessionCard.jsx";
 import { primaryButtonClass, tabButtonClass } from "./dashboardShared.js";

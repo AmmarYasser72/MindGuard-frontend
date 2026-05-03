@@ -1,8 +1,8 @@
-import Icon from "../../../components/common/Icon.jsx";
+import Icon from "../common/Icon.jsx";
 import {
   clinicalSummaries,
   patients,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import AlertSection from "./AlertSection.jsx";
 
 export default function MonitorScreen({ onOpenSchedule }) {

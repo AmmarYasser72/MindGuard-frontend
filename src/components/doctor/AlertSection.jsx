@@ -1,5 +1,5 @@
-import Icon from "../../../components/common/Icon.jsx";
-import { patientName } from "../../../data/doctorData.js";
+import Icon from "../common/Icon.jsx";
+import { patientName } from "../../data/doctorData.js";
 import { time } from "./dashboardShared.js";
 
 export default function AlertSection({ title, tone, items, onOpenSchedule }) {

@@ -1,4 +1,4 @@
-import { severityLabels } from "../../../data/doctorData.js";
+import { severityLabels } from "../../data/doctorData.js";
 
 export default function SeverityPill({ severity }) {
   const styles = {

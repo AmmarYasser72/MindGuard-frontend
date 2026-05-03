@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Modal } from "../../../components/common/Modal.jsx";
-import { useToast } from "../../../components/common/Toast.jsx";
+import { Modal } from "../common/Modal.jsx";
+import { useToast } from "../common/Toast.jsx";
 import {
   defaultScheduleForm,
   patientName,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import {
   fieldClass,
   inputClass,

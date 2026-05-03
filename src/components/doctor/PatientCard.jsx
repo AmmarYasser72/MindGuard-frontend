@@ -1,11 +1,11 @@
-import Icon from "../../../components/common/Icon.jsx";
-import MiniWave from "../../../components/common/MiniWave.jsx";
+import Icon from "../common/Icon.jsx";
+import MiniWave from "../common/MiniWave.jsx";
 import {
   ageGender,
   conditionLabels,
   lastSeenLabel,
   patientName,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import MetricBlock from "./MetricBlock.jsx";
 import SeverityPill from "./SeverityPill.jsx";
 import { primaryButtonClass, secondaryButtonClass } from "./dashboardShared.js";

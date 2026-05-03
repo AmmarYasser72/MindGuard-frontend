@@ -7,11 +7,11 @@ import {
   patients,
   sessions as demoSessions,
 } from "../../data/doctorData.js";
-import DoctorHome from "./components/DoctorHome.jsx";
-import MonitorScreen from "./components/MonitorScreen.jsx";
-import PatientsScreen from "./components/PatientsScreen.jsx";
-import ScheduleSessionModal from "./components/ScheduleSessionModal.jsx";
-import SessionsScreen from "./components/SessionsScreen.jsx";
+import DoctorHome from "../../components/doctor/DoctorHome.jsx";
+import MonitorScreen from "../../components/doctor/MonitorScreen.jsx";
+import PatientsScreen from "../../components/doctor/PatientsScreen.jsx";
+import ScheduleSessionModal from "../../components/doctor/ScheduleSessionModal.jsx";
+import SessionsScreen from "../../components/doctor/SessionsScreen.jsx";
 import {
   bottomNavClass,
   destinations,
@@ -19,7 +19,7 @@ import {
   greeting,
   primaryPurple,
   railButtonClass,
-} from "./components/dashboardShared.js";
+} from "../../components/doctor/dashboardShared.js";
 
 export default function DoctorDashboard() {
   const [selected, setSelected] = useState("dashboard");

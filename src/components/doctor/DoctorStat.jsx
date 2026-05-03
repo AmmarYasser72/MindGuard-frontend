@@ -1,4 +1,4 @@
-import Icon from "../../../components/common/Icon.jsx";
+import Icon from "../common/Icon.jsx";
 
 export default function DoctorStat({ title, value, icon, helper, tone }) {
   const styles = {

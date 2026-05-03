@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Icon from "../../../components/common/Icon.jsx";
+import Icon from "../common/Icon.jsx";
 import {
   patients,
   patientName,
   severityLabels,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import PatientCard from "./PatientCard.jsx";
 import PatientDetails from "./PatientDetails.jsx";
 import EmptyPanel from "./EmptyPanel.jsx";

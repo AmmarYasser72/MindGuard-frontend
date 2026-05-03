@@ -1,9 +1,9 @@
-import { useToast } from "../../../components/common/Toast.jsx";
-import Icon from "../../../components/common/Icon.jsx";
+import { useToast } from "../common/Toast.jsx";
+import Icon from "../common/Icon.jsx";
 import {
   sessionTypeIcon,
   shortReason,
-} from "../../../data/doctorData.js";
+} from "../../data/doctorData.js";
 import ConditionPill from "./ConditionPill.jsx";
 import SeverityPill from "./SeverityPill.jsx";
 import { formatTime, primaryButtonClass, secondaryButtonClass } from "./dashboardShared.js";

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import Icon from "../../components/common/Icon.jsx";
-import { Button, Card } from "../../components/common/Primitives.jsx";
-import { AuthLogo, ErrorBanner, PasswordField, TextField } from "../../components/auth/AuthForm.jsx";
+import Button from "../../components/common/Button.jsx";
+import Card from "../../components/common/Card.jsx";
+import AuthLogo from "../../components/auth/AuthLogo.jsx";
+import ErrorBanner from "../../components/auth/ErrorBanner.jsx";
+import PasswordField from "../../components/auth/PasswordField.jsx";
+import TextField from "../../components/auth/TextField.jsx";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useRouter } from "../../hooks/useRouter.js";
 
@@ -76,7 +80,7 @@ export default function SignInPage() {
               <div className="form-title-row">
                 <div>
                   <h2>Sign in</h2>
-                  <p>Use your email and password.</p>
+                  <p>Enter your email and password</p>
                 </div>
               </div>
               <ErrorBanner error={error} />

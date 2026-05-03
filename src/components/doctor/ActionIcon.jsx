@@ -1,4 +1,4 @@
-import Icon from "../../../components/common/Icon.jsx";
+import Icon from "../common/Icon.jsx";
 
 export default function ActionIcon({ icon, color, bg }) {
   return (
