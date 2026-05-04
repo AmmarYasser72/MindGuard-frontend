@@ -1,32 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import Icon from "../../components/common/Icon.jsx";
 import { useRouter } from "../../hooks/useRouter.js";
-import { createEchoSocket, formatTime, loadChatMessages, saveChatMessages } from "../../services/chatService.js";
+import { createChatClient, formatTime, loadChatState, saveChatMessages } from "../../services/chatService.js";
 
 export default function PatientChat({ userId }) {
-  const [messages, setMessages] = useState(() => loadChatMessages(userId));
+  const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
+  const [connectionMode, setConnectionMode] = useState("loading");
   const { navigate } = useRouter();
   const listRef = useRef(null);
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = createEchoSocket((message) => {
+    let active = true;
+
+    loadChatState(userId).then((state) => {
+      if (!active) return;
+      setMessages(state.messages);
+      setConnectionMode(state.mode);
+    });
+
+    socketRef.current = createChatClient((message) => {
       setMessages((current) => [...current, message]);
     });
-    const timer = window.setTimeout(() => {
-      setMessages((current) => [
-        ...current,
-        { text: "Hello! I'm a mock response 😊", isUser: false, time: formatTime() },
-      ]);
-    }, 1000);
+
     return () => {
+      active = false;
       socketRef.current?.close();
-      window.clearTimeout(timer);
     };
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
+    if (!messages.length) return;
     saveChatMessages(userId, messages);
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, userId]);
@@ -47,7 +52,7 @@ export default function PatientChat({ userId }) {
         </button>
         <div>
           <h1>Chat with NOVA</h1>
-          <span>Online</span>
+          <span>{connectionMode === "remote" ? "Connected to backend history" : "Local chat mode"}</span>
         </div>
       </header>
       <section className="chat-messages" ref={listRef}>

@@ -76,7 +76,7 @@ export default function SignupPage() {
                 label="First Name"
                 icon="user"
                 name="given-name"
-                placeholder="John"
+                placeholder="ammar"
                 value={form.firstName}
                 onChange={(value) => update("firstName", value)}
                 autoComplete="given-name"
@@ -86,7 +86,7 @@ export default function SignupPage() {
                 label="Last Name"
                 icon="user"
                 name="family-name"
-                placeholder="Doe"
+                placeholder="yasser"
                 value={form.lastName}
                 onChange={(value) => update("lastName", value)}
                 autoComplete="family-name"
@@ -108,7 +108,7 @@ export default function SignupPage() {
               icon="mail"
               type="email"
               name="email"
-              placeholder="john.doe@example.com"
+              placeholder="ammaryasser@gmail.com"
               value={form.email}
               onChange={(value) => update("email", value)}
               autoComplete="email"

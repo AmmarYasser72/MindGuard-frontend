@@ -7,10 +7,10 @@ This repository contains the frontend application built with Vite, React, and Ta
 ## Features
 
 - Patient and doctor authentication flows
-- Demo login and local fallback storage for development
+- Backend-connected authentication against the local Nest API
 - Patient dashboard with mood tracking, wellness metrics, goals, and recent activity
 - Analytics screens for mood, stress, anxiety, sleep, and depression insights
-- patient chat with WebSocket echo fallback behavior
+- Patient chat with backend history bootstrap and local reply fallback
 - Doctor dashboard with patient monitoring, sessions, and care workflow screens
 - Reusable UI primitives, icons, charts, cards, modals, and toast notifications
 - Responsive mobile-first layouts with a bottom navigation experience
@@ -18,10 +18,9 @@ This repository contains the frontend application built with Vite, React, and Ta
 ## Tech Stack
 
 - React 19
-- Tailwind CSS 
-- JavaScript 
+- Tailwind CSS
+- JavaScript
 - Fetch API
-- WebSocket API
 
 ## Project Structure
 
@@ -39,7 +38,7 @@ src/
     auth/                         Splash, onboarding, sign in, signup pages
     doctor/                       Doctor dashboard
     patient/                      Patient dashboard, analytics, chat, and tool pages
-  services/                       Auth, chat, and storage services
+  services/                       API, auth, chat, session, and storage services
   styles/                         Theme tokens and application styles
 ```
 
@@ -91,7 +90,6 @@ npm run preview    Preview the production build locally
 npm run lint       Run ESLint across the project
 npm run deploy     Deploy the dist/ folder with gh-pages
 ```
-
 
 ## Demo Accounts
 

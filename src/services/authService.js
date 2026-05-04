@@ -1,13 +1,8 @@
 import { storage } from "./storage.js";
+import { request } from "./apiClient.js";
+import { clearSession, getSession, setSession } from "./session.js";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-const SESSION_KEY = "auth_session";
 const USERS_KEY = "auth_users";
-const DEFAULT_AUTH_TIMEOUT_MS = 2200;
-const configuredTimeout = Number(import.meta.env.VITE_AUTH_TIMEOUT_MS);
-const AUTH_TIMEOUT_MS = Number.isFinite(configuredTimeout) && configuredTimeout > 0
-  ? configuredTimeout
-  : DEFAULT_AUTH_TIMEOUT_MS;
 
 const demoUsers = [
   {
@@ -44,94 +39,95 @@ function findLocalUser(email, password) {
 }
 
 function persistSession(user, token = "local-demo-token") {
-  const session = { token, user };
-  storage.set(SESSION_KEY, session);
+  setSession({ token, user });
   return user;
-}
-
-function createHttpError(message, status) {
-  const error = new Error(message);
-  error.status = status;
-  return error;
-}
-
-async function request(path, options = {}) {
-  const controller = new AbortController();
-  const timer = globalThis.setTimeout(() => controller.abort(), AUTH_TIMEOUT_MS);
-  const { headers, ...fetchOptions } = options;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}${path}`, {
-      ...fetchOptions,
-      headers: { "Content-Type": "application/json", ...(headers || {}) },
-      signal: controller.signal,
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw createHttpError(data.message || data.error || "Request failed", response.status);
-    }
-    return data;
-  } catch (error) {
-    if (error.name === "AbortError") {
-      const timeoutError = new Error("Authentication server took too long to respond");
-      timeoutError.code = "AUTH_TIMEOUT";
-      throw timeoutError;
-    }
-    throw error;
-  } finally {
-    globalThis.clearTimeout(timer);
-  }
 }
 
 function roleFromEmail(email) {
   return email.includes("doctor") || email.startsWith("dr.") ? "doctor" : "patient";
 }
 
-function profilePayload(data) {
-  if (!data || typeof data !== "object") return null;
-  const candidate = data.user || data.profile || data.data?.user || data.data?.profile || data.data || data;
-  if (!candidate || typeof candidate !== "object") return null;
-  const hasProfileField = candidate.id
-    || candidate.uid
-    || candidate._id
-    || candidate.email
-    || candidate.name
-    || candidate.displayName
-    || candidate.role;
-  return hasProfileField ? candidate : null;
-}
-
 function authToken(data) {
   return data?.token || data?.accessToken || data?.access_token || data?.data?.token || data?.data?.accessToken || data?.data?.access_token;
 }
 
+function normalizeRole(role, fallback = "patient") {
+  if (typeof role !== "string" || !role.trim()) return fallback;
+  return role.toLowerCase();
+}
+
+function firstValue(...values) {
+  return values.find((value) => value !== undefined && value !== null && value !== "");
+}
+
+function firstObject(...values) {
+  return values.find((value) => value && typeof value === "object" && !Array.isArray(value));
+}
+
+function decodeJwtPayload(token) {
+  const rawToken = authToken({ token });
+  const encodedToken = rawToken?.toLowerCase().startsWith("bearer ")
+    ? rawToken.slice(7).trim()
+    : rawToken;
+  if (!encodedToken) return null;
+
+  const payload = encodedToken.split(".")[1];
+  if (!payload) return null;
+
+  try {
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(normalized.length + ((4 - (normalized.length % 4)) % 4), "=");
+    return JSON.parse(window.atob(padded));
+  } catch {
+    return null;
+  }
+}
+
 function normalizeProfile(data, fallback = {}) {
   return {
-    uid: data.id || data.uid || data._id || fallback.uid || crypto.randomUUID(),
-    email: data.email || fallback.email,
-    displayName: data.name || data.displayName || fallback.displayName || fallback.email,
-    role: data.role || fallback.role || "patient",
+    uid: firstValue(data.id, data.uid, data._id, data.sub, fallback.uid, crypto.randomUUID()),
+    email: firstValue(data.email, fallback.email),
+    displayName: firstValue(
+      data.name,
+      data.displayName,
+      data.fullName,
+      fallback.displayName,
+      fallback.email,
+      "MindGuard User",
+    ),
+    role: normalizeRole(
+      firstValue(data.role, data.userRole, data.accountType, data.type),
+      fallback.role || "patient",
+    ),
   };
 }
 
-function canUseLocalFallback(error) {
-  return error.code === "AUTH_TIMEOUT"
-    || error.name === "TypeError"
-    || error.message === "Failed to fetch"
-    || error.status === 404
-    || error.status >= 500;
+function profilePayload(data) {
+  if (!data || typeof data !== "object") return {};
+  return firstObject(
+    data.user,
+    data.profile,
+    data.doctor,
+    data.patient,
+    data.data?.user,
+    data.data?.profile,
+    data.data?.doctor,
+    data.data?.patient,
+    data.data,
+    data,
+  ) || {};
 }
 
-async function fetchProfile({ token, role, fallback }) {
-  const profilePath = role === "doctor" ? "/api/doctor/profile" : "/api/patient/profile";
-  try {
-    const profile = await request(profilePath, {
-      headers: token ? { authorization: `Bearer ${token}` } : {},
-    });
-    return normalizeProfile(profilePayload(profile) || profile, { ...fallback, role });
-  } catch {
-    return normalizeProfile({}, { ...fallback, role });
-  }
+function profileFromAuth(data, fallback) {
+  const token = authToken(data);
+  return normalizeProfile({
+    ...(decodeJwtPayload(token) || {}),
+    ...profilePayload(data),
+  }, fallback);
+}
+
+function createConnectionError() {
+  return new Error("Couldn't reach the backend. Make sure your local backend server is running.");
 }
 
 function createLocalUser(profile, cleanEmail) {
@@ -149,9 +145,15 @@ function createLocalUser(profile, cleanEmail) {
   return removePassword(user);
 }
 
+function isConnectionError(error) {
+  return error.name === "TypeError"
+    || error.message === "Failed to fetch"
+    || error.code === "REQUEST_TIMEOUT";
+}
+
 export const authService = {
   getCurrentUser() {
-    return storage.get(SESSION_KEY)?.user || null;
+    return getSession()?.user || null;
   },
 
   async signIn(email, password) {
@@ -162,22 +164,20 @@ export const authService = {
     }
 
     try {
-      const auth = await request("/api/auth/login", {
+      const auth = await request("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email: cleanEmail, password }),
       });
       const token = authToken(auth);
       const fallback = { email: cleanEmail, role: roleFromEmail(cleanEmail) };
-      const authProfile = profilePayload(auth);
-      if (authProfile) {
-        return persistSession(normalizeProfile(authProfile, fallback), token);
-      }
-      const role = authProfile?.role || fallback.role;
-      const profile = await fetchProfile({ token, role, fallback });
-      return persistSession(profile, token);
+      return persistSession(profileFromAuth(auth, fallback), token);
     } catch (error) {
-      if (canUseLocalFallback(error)) {
-        throw new Error("Invalid email or password");
+      const fallbackUser = findLocalUser(cleanEmail, password);
+      if (fallbackUser && isConnectionError(error)) {
+        return persistSession(removePassword(fallbackUser));
+      }
+      if (isConnectionError(error)) {
+        throw createConnectionError();
       }
       throw new Error(error.message || "Invalid email or password");
     }
@@ -201,30 +201,25 @@ export const authService = {
     const fallback = { email: cleanEmail, displayName: body.name, role: profile.role };
 
     try {
-      const auth = await request("/api/auth/register", {
+      const auth = await request("/auth/register", {
         method: "POST",
         body: JSON.stringify(body),
       });
       const token = authToken(auth);
-      const authProfile = profilePayload(auth);
-      if (authProfile) {
-        return persistSession(normalizeProfile(authProfile, fallback), token);
-      }
-      const remoteProfile = await fetchProfile({ token, role: profile.role, fallback });
-      return persistSession(remoteProfile, token);
+      return persistSession(profileFromAuth(auth, fallback), token);
     } catch (error) {
-      if (!canUseLocalFallback(error)) {
-        throw new Error(error.message || "Registration failed");
+      if (isConnectionError(error)) {
+        const users = savedUsers();
+        if (users.some((user) => user.email.toLowerCase() === cleanEmail)) {
+          throw new Error("Email already exists");
+        }
+        return persistSession(createLocalUser(profile, cleanEmail));
       }
-      const users = savedUsers();
-      if (users.some((user) => user.email.toLowerCase() === cleanEmail)) {
-        throw new Error("Email already exists");
-      }
-      return persistSession(createLocalUser(profile, cleanEmail));
+      throw new Error(error.message || "Registration failed");
     }
   },
 
   signOut() {
-    storage.remove(SESSION_KEY);
+    clearSession();
   },
 };

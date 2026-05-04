@@ -105,7 +105,7 @@ export default function DoctorSignupPage() {
               <TextField
                 label="First Name"
                 icon="user"
-                placeholder="Sarah"
+                placeholder="ammar"
                 value={form.firstName}
                 onChange={(value) => update("firstName", value)}
                 autoComplete="given-name"
@@ -114,7 +114,7 @@ export default function DoctorSignupPage() {
               <TextField
                 label="Last Name"
                 icon="user"
-                placeholder="Johnson"
+                placeholder="yasser"
                 value={form.lastName}
                 onChange={(value) => update("lastName", value)}
                 autoComplete="family-name"
@@ -164,7 +164,7 @@ export default function DoctorSignupPage() {
               label="Years of Experience"
               icon="briefcase-business"
               type="number"
-              placeholder="e.g. 5"
+              placeholder="e.g 5"
               value={form.yearsOfExperience}
               onChange={(value) => update("yearsOfExperience", value)}
               min="0"
@@ -174,7 +174,7 @@ export default function DoctorSignupPage() {
               label="Professional Email"
               icon="mail"
               type="email"
-              placeholder="dr.johnson@clinic.com"
+              placeholder="Dr.ammar@gmail.com"
               value={form.email}
               onChange={(value) => update("email", value)}
               autoComplete="email"

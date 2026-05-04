@@ -14,6 +14,10 @@ const demoAccounts = [
   { title: "Doctor Account", email: "doctor@demo.com", password: "demo123", icon: "stethoscope" },
 ];
 
+function dashboardPath(user) {
+  return user.role === "doctor" ? "/doctor-dashboard" : "/patient-dashboard";
+}
+
 export default function SignInPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -37,7 +41,7 @@ export default function SignInPage() {
     }
     try {
       const user = await signIn(cleanEmail, credentials.password);
-      navigate(user.email?.includes("doctor") || user.role === "doctor" ? "/doctor-dashboard" : "/patient-dashboard");
+      navigate(dashboardPath(user));
     } catch (authError) {
       setError(authError.message);
     }
