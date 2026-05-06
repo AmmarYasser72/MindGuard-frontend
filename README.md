@@ -4,6 +4,8 @@ MindGuard is a React-based mental health support interface for patients and doct
 
 This repository contains the frontend application built with Vite, React, and Tailwind CSS.
 
+Live demo: https://mind-guard-frontend-zeta.vercel.app 
+
 ## Features
 
 - Patient and doctor authentication flows
