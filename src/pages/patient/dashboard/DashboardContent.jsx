@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Icon from "../../../components/common/Icon.jsx";
+import NotificationPanel from "../../../components/patient/NotificationPanel.jsx";
 import LineChart from "../../../components/common/LineChart.jsx";
 import { useToast } from "../../../components/common/Toast.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
@@ -7,6 +8,7 @@ import { useRouter } from "../../../hooks/useRouter.js";
 import {
   dailyGoals,
   moodOptions,
+  patientNotifications,
   quickActions,
   recentActivities,
   weeklyMood,
@@ -20,11 +22,27 @@ const iconButtonClass = "grid h-10 w-10 place-items-center rounded-lg border bor
 
 export default function DashboardContent({ email }) {
   const [selectedMood, setSelectedMood] = useState(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState(patientNotifications);
   const { navigate } = useRouter();
   const { signOut } = useAuth();
   const { showToast } = useToast();
   const average = useMemo(() => Math.round((weeklyMood.reduce((sum, item) => sum + item.value, 0) / weeklyMood.length) * 100), []);
   const completedGoals = dailyGoals.filter((goal) => goal.progress >= 0.7).length;
+  const unreadCount = notifications.filter((notification) => notification.unread).length;
+
+  useEffect(() => {
+    if (!isNotificationsOpen) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setIsNotificationsOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isNotificationsOpen]);
 
   function greeting() {
     const hour = new Date().getHours();
@@ -38,8 +56,26 @@ export default function DashboardContent({ email }) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
+  function handleOpenNotifications() {
+    setIsNotificationsOpen(true);
+  }
+
+  function handleMarkAllRead() {
+    setNotifications((currentNotifications) => currentNotifications.map((notification) => ({ ...notification, unread: false })));
+    showToast("All notifications marked as read", "success");
+  }
+
   return (
     <section className="mx-auto w-full max-w-7xl space-y-5">
+      {isNotificationsOpen ? (
+        <NotificationPanel
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onClose={() => setIsNotificationsOpen(false)}
+          onMarkAllRead={handleMarkAllRead}
+        />
+      ) : null}
+
       <header className="overflow-hidden rounded-lg text-white shadow-sm shadow-indigo-950/10" style={{ background: "linear-gradient(135deg, #4a3b8c 0%, #6366f1 58%, #8b5cf6 100%)" }}>
         <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-end">
           <div className="space-y-5">
@@ -55,8 +91,13 @@ export default function DashboardContent({ email }) {
                 <button type="button" className={iconButtonClass} aria-label="Refresh dashboard" title="Refresh dashboard" onClick={() => showToast("Dashboard refreshed")}>
                   <Icon name="refresh-cw" size={20} color="#fff" />
                 </button>
-                <button type="button" className={iconButtonClass} aria-label="Notifications" title="Notifications" onClick={() => showToast("Open notifications")}>
+                <button type="button" className={`${iconButtonClass} relative`} aria-label="Notifications" title="Notifications" onClick={handleOpenNotifications}>
                   <Icon name="bell" size={20} color="#fff" />
+                  {unreadCount > 0 ? (
+                    <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  ) : null}
                 </button>
               </div>
             </div>

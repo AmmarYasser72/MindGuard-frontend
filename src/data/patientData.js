@@ -42,6 +42,57 @@ export const recentActivities = [
   { title: "Meditation session completed", time: "Yesterday", icon: "sparkles", color: "#8b5cf6" },
 ];
 
+export const patientNotifications = [
+  {
+    id: "notif-heart-rate",
+    title: "Heart rate update",
+    message: "Your resting heart rate reached 96 bpm this afternoon. Take a short breathing break and recheck in 15 minutes.",
+    time: "5 min ago",
+    icon: "activity",
+    color: "#ef4444",
+    bg: "#fee2e2",
+    category: "Vitals",
+    value: "96 bpm",
+    unread: true,
+  },
+  {
+    id: "notif-sleep",
+    title: "Sleep tracking synced",
+    message: "Last night you logged 7h 32m of sleep. Your sleep consistency is improving this week.",
+    time: "42 min ago",
+    icon: "moon",
+    color: "#8b5cf6",
+    bg: "#f3e8ff",
+    category: "Sleep",
+    value: "7h 32m",
+    unread: true,
+  },
+  {
+    id: "notif-exercise",
+    title: "Health track progress",
+    message: "You completed 6k of your 10k step goal. A 20 minute walk will keep you on pace today.",
+    time: "1 hour ago",
+    icon: "dumbbell",
+    color: "#10b981",
+    bg: "#d1fae5",
+    category: "Activity",
+    value: "60%",
+    unread: true,
+  },
+  {
+    id: "notif-mood",
+    title: "Mood check-in reminder",
+    message: "You have not recorded your mood today yet. A quick check-in helps your doctor follow your progress.",
+    time: "Today",
+    icon: "heart",
+    color: "#ec4899",
+    bg: "#fce7f3",
+    category: "Care plan",
+    value: "Pending",
+    unread: false,
+  },
+];
+
 export const toolPages = {
   "/breathing": {
     title: "Breathing Exercises",
