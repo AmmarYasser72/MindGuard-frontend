@@ -6,8 +6,12 @@ export default function GoalProgress({ goal }) {
 
   return (
     <div className="trigger-row">
-      <span><strong>{goal.goal}</strong><em style={{ color }}>{goal.current.toFixed(1)} / {goal.target.toFixed(1)} {goal.unit}</em></span>
+      <span><strong>{goal.goal}</strong><em style={{ color }}>{formatGoalValue(goal.current)} / {formatGoalValue(goal.target)} {goal.unit}</em></span>
       <ProgressBar value={progress} color={color} />
     </div>
   );
+}
+
+function formatGoalValue(value) {
+  return Number.isInteger(value) ? value.toString() : value.toFixed(1);
 }

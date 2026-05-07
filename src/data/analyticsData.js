@@ -15,11 +15,11 @@ export const moodInsights = [
 ];
 
 export const moodBars = [
-  { time: "10:08", mood: 5, emoji: "😍" },
-  { time: "12:10", mood: 1, emoji: "😠" },
-  { time: "14:40", mood: 4, emoji: "😊" },
-  { time: "18:30", mood: 2, emoji: "😢" },
-  { time: "20:10", mood: 3, emoji: "😐" },
+  { time: "10:08", mood: 5, emoji: "\u{1F60D}" },
+  { time: "12:10", mood: 1, emoji: "\u{1F620}" },
+  { time: "14:40", mood: 4, emoji: "\u{1F60A}" },
+  { time: "18:30", mood: 2, emoji: "\u{1F622}" },
+  { time: "20:10", mood: 3, emoji: "\u{1F610}" },
 ];
 
 export const stressAnalytics = {
@@ -36,7 +36,14 @@ export const stressAnalytics = {
     ],
     badge: "Low",
   },
-  chart: { title: "Stress Patterns", tag: "Hourly", data: [3, 5, 4, 7, 6, 4], color: "#f59e0b" },
+  chart: {
+    title: "Stress Patterns",
+    tag: "Hourly",
+    data: [3, 5, 4, 7, 6, 4],
+    color: "#f59e0b",
+    labels: ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"],
+    description: "Mid-afternoon shows the highest pressure. Relief sessions are working best after 3 PM.",
+  },
   triggers: [
     { name: "Work Meetings", percentage: 50, color: "#ef4444" },
     { name: "Social Media", percentage: 38, color: "#dc2626" },
@@ -62,6 +69,8 @@ export const stressAnalytics = {
     gradient: ["#ef4444", "#dc2626"],
     primary: "Quick Relief",
     secondary: "Crisis Support",
+    primaryAction: { type: "navigate", path: "/breathing" },
+    secondaryAction: { type: "navigate", path: "/patient-chat/support@mindguard.app" },
   },
 };
 
@@ -79,7 +88,14 @@ export const anxietyAnalytics = {
     ],
     badge: "Moderate",
   },
-  chart: { title: "Anxiety Patterns", tag: "Hourly", data: [6, 7, 5, 8, 7, 4], color: "#f59e0b" },
+  chart: {
+    title: "Anxiety Patterns",
+    tag: "Hourly",
+    data: [6, 7, 5, 8, 7, 4],
+    color: "#f59e0b",
+    labels: ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"],
+    description: "Your anxiety tends to peak around the middle of the day, then settles after evening routines.",
+  },
   triggers: [
     { name: "Social Situations", percentage: 65, color: "#f59e0b" },
     { name: "Work Deadlines", percentage: 58, color: "#d97706" },
@@ -111,6 +127,8 @@ export const anxietyAnalytics = {
     gradient: ["#f59e0b", "#d97706"],
     primary: "Quick Calm",
     secondary: "Crisis Support",
+    primaryAction: { type: "navigate", path: "/breathing" },
+    secondaryAction: { type: "navigate", path: "/patient-chat/support@mindguard.app" },
   },
 };
 
@@ -120,8 +138,13 @@ export const sleepAnalytics = {
     { icon: "star", label: "Sleep Quality", value: "85%" },
     { icon: "timer", label: "Time to Sleep", value: "12 min" },
   ],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   chart: [75, 80, 78, 86, 82, 90, 85],
   energy: [62, 68, 70, 76, 72, 84, 80],
+  legend: [
+    { label: "Sleep Quality", color: "#8b5cf6" },
+    { label: "Energy Level", color: "#06b6d4" },
+  ],
   stages: [
     { stage: "Deep Sleep", duration: "1h 45m", percentage: "23%", color: "#1e40af" },
     { stage: "REM Sleep", duration: "1h 32m", percentage: "20%", color: "#7c3aed" },
@@ -143,6 +166,8 @@ export const sleepAnalytics = {
 };
 
 export const depressionAnalytics = {
+  timeframe: "Last 7 days",
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   severityData: [7, 6, 5, 6, 5, 4, 3],
   strategies: [
     { name: "Physical Exercise", effectiveness: "85%", description: "Regular physical activity boosts mood", icon: "dumbbell" },
