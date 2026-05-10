@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Icon from "../../components/common/Icon.jsx";
-import Button from "../../components/common/Button.jsx";
 import Card from "../../components/common/Card.jsx";
-import AuthLogo from "../../components/auth/AuthLogo.jsx";
+import AuthProfileHeader from "../../components/auth/AuthProfileHeader.jsx";
+import AuthRoleCard from "../../components/auth/AuthRoleCard.jsx";
 import ErrorBanner from "../../components/auth/ErrorBanner.jsx";
 import PasswordField from "../../components/auth/PasswordField.jsx";
 import SelectField from "../../components/auth/SelectField.jsx";
+import SubmitButton from "../../components/auth/SubmitButton.jsx";
 import TextField from "../../components/auth/TextField.jsx";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useRouter } from "../../hooks/useRouter.js";
@@ -47,31 +48,30 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="auth-page profile-auth-page">
-      <section className="profile-auth-shell">
-        <div className="profile-auth-header">
-          <button type="button" className="back-chip" onClick={() => navigate("/login")} aria-label="Back to sign in">
-            <Icon name="arrow-left" size={18} />
-          </button>
-          <AuthLogo size={56} icon="user-plus" />
-          <div>
-            <span className="eyebrow">Patient account</span>
-            <h1>Create Account</h1>
-            <p>Start your wellness journey with a secure profile.</p>
-          </div>
-        </div>
+    <main className="min-h-screen bg-[linear-gradient(180deg,#f4fbf9_0%,#f8fafc_52%,#ffffff_100%)] px-4 py-6 sm:px-6 lg:px-8">
+      <section className="mx-auto grid w-full max-w-3xl gap-6">
+        <AuthProfileHeader
+          backLabel="Back to sign in"
+          description="Start your wellness journey with a secure profile."
+          eyebrow="Patient account"
+          icon="user-plus"
+          onBack={() => navigate("/login")}
+          title="Create Account"
+        />
 
-        <Card className="profile-form-card">
-          <form onSubmit={onSubmit}>
-            <div className="form-title-row">
+        <Card className="p-6 sm:p-7">
+          <form className="grid gap-5" onSubmit={onSubmit}>
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <h2>Personal details</h2>
-                <p>Keep these details accurate for better care matching.</p>
+                <h2 className="text-2xl font-bold text-slate-950">Personal details</h2>
+                <p className="mt-1 text-sm text-slate-500">Keep these details accurate for better care matching.</p>
               </div>
-              <Icon name="user-check" size={22} color="#6366f1" />
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-violet-50">
+                <Icon name="user-check" size={22} color="#6366f1" />
+              </span>
             </div>
             <ErrorBanner error={error} />
-            <div className="form-grid two">
+            <div className="grid gap-4 sm:grid-cols-2">
               <TextField
                 label="First Name"
                 icon="user"
@@ -140,31 +140,26 @@ export default function SignupPage() {
               autoComplete="new-password"
               disabled={authLoading}
             />
-            <Button type="submit" className="btn-full auth-submit" disabled={authLoading}>
-              {authLoading ? (
-                <>
-                  <Icon name="loader-circle" size={18} color="#fff" className="spin-icon" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  Create Account
-                  <Icon name="arrow-right" size={18} color="#fff" />
-                </>
-              )}
-            </Button>
+            <SubmitButton loading={authLoading}>
+              Create Account
+              <Icon name="arrow-right" size={18} color="#fff" />
+            </SubmitButton>
           </form>
-          <p className="auth-switch">
-            Already have an account? <button type="button" onClick={() => navigate("/login")}>Sign In</button>
+          <p className="mt-5 text-center text-sm text-slate-500">
+            Already have an account?{" "}
+            <button className="font-bold text-[var(--primary)]" type="button" onClick={() => navigate("/login")}>
+              Sign In
+            </button>
           </p>
         </Card>
-        <button type="button" className="role-link-card doctor-link" onClick={() => navigate("/doctor-signup")}>
-          <span><Icon name="stethoscope" size={24} color="#059669" /></span>
-          <span>
-            <strong>Are you a healthcare professional?</strong>
-            <small>Sign up as a Doctor</small>
-          </span>
-        </button>
+
+        <AuthRoleCard
+          icon="stethoscope"
+          onClick={() => navigate("/doctor-signup")}
+          subtitle="Sign up as a Doctor"
+          title="Are you a healthcare professional?"
+          tone="doctor"
+        />
       </section>
     </main>
   );

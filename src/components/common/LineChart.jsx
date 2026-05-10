@@ -44,10 +44,14 @@ export default function LineChart({ data = [], color = "#6366f1", fill = true, l
   });
 
   return (
-    <div className="chart-wrap">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="line-chart">
+    <div className="grid gap-3">
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="h-40 w-full rounded-[1.25rem] bg-gradient-to-b from-slate-50 to-slate-100/80"
+      >
         {[20, 40, 60, 80].map((y) => (
-          <line key={y} x1="0" x2="100" y1={y} y2={y} className="chart-grid" />
+          <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="rgba(156,163,175,0.35)" strokeDasharray="2 3" />
         ))}
         {plottedSeries
           .filter((entry) => entry.fill)
@@ -72,7 +76,7 @@ export default function LineChart({ data = [], color = "#6366f1", fill = true, l
         )}
       </svg>
       {labels.length ? (
-        <div className="chart-labels">
+        <div className="flex justify-between gap-2 text-[11px] font-semibold text-slate-400">
           {labels.map((label) => <span key={label}>{label}</span>)}
         </div>
       ) : null}

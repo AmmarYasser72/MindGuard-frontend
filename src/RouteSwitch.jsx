@@ -23,8 +23,8 @@ export default function RouteSwitch({ path }) {
   if (path === "/doctor-dashboard") return <DoctorDashboard />;
 
   return (
-    <main className="not-found">
-      <h1>Page Not Found</h1>
+    <main className="grid min-h-screen place-items-center bg-slate-50 px-4 text-center text-slate-950">
+      <h1 className="text-3xl font-bold">Page Not Found</h1>
     </main>
   );
 }

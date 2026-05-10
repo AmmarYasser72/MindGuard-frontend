@@ -1,6 +1,12 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { cn } from "../../utils/cn.js";
 
 const ToastContext = createContext(null);
+const toneClasses = {
+  error: "bg-red-600",
+  info: "bg-slate-900",
+  success: "bg-emerald-500",
+};
 
 export function ToastProvider({ children }) {
   const [toast, setToast] = useState(null);
@@ -16,7 +22,16 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      {toast ? <div className={`toast toast-${toast.tone}`}>{toast.message}</div> : null}
+      {toast ? (
+        <div
+          className={cn(
+            "fixed bottom-5 right-5 z-80 max-w-[min(26rem,calc(100vw-2.5rem))] rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-[0_20px_45px_rgba(15,23,42,0.2)]",
+            toneClasses[toast.tone] || toneClasses.info,
+          )}
+        >
+          {toast.message}
+        </div>
+      ) : null}
     </ToastContext.Provider>
   );
 }

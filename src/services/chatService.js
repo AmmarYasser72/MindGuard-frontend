@@ -133,12 +133,34 @@ export function createChatClient(onMessage) {
     send(text) {
       window.setTimeout(() => {
         onMessage({
-          text: `NOVA local reply: ${text}`,
+          text: createLocalReply(text),
           isUser: false,
           time: formatTime(),
         });
-      }, 450);
+      }, 700);
     },
     close() {},
   };
+}
+
+function createLocalReply(text) {
+  const normalized = text.toLowerCase();
+
+  if (normalized.includes("show me") || normalized.includes("what you can do")) {
+    return "Of course! I can assist you with a wide range of tasks and answer questions on various topics. Here are some things I can do:\n\n- Answer questions: Just ask me anything you like.\n\n- Generate text: I can write notes, reflections, reports, stories and more.\n\n- Conversation AI: I can engage in natural conversations and help you think through what is on your mind.";
+  }
+
+  if (normalized.includes("anxious") || normalized.includes("panic") || normalized.includes("worried")) {
+    return "I'm here with you. Let's slow this down together: breathe in for 4, hold for 2, and breathe out for 6. What are you noticing in your body right now?";
+  }
+
+  if (normalized.includes("calm") || normalized.includes("breath")) {
+    return "Let's do a quick reset. Drop your shoulders, unclench your jaw, and take three slow breaths. I'll stay with you while your nervous system catches up.";
+  }
+
+  if (normalized.includes("mood") || normalized.includes("feel")) {
+    return "We can track that. If you had to choose one word for your mood right now, what would it be?";
+  }
+
+  return "I hear you. Tell me a little more about what's been going on, and we'll take it one step at a time.";
 }

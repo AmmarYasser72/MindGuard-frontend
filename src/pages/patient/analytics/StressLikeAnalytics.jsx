@@ -8,7 +8,7 @@ import TriggerSection from "./TriggerSection.jsx";
 
 export default function StressLikeAnalytics({ data }) {
   return (
-    <div className="analytics-stack">
+    <div className="grid gap-5 p-4 sm:gap-6 sm:p-6">
       <AnalyticsHeader title={data.title} subtitle={data.subtitle} timeframe={data.timeframe} />
       <MetricGradientCard current={data.current} />
       <AnalyticsChart title={data.chart.title} tag={data.chart.tag} color={data.chart.color} data={data.chart.data} description={data.chart.description} labels={data.chart.labels} />

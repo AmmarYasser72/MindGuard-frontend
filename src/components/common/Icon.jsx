@@ -25,7 +25,7 @@ export default function Icon({ name, size = 20, color = "currentColor", classNam
     <span
       aria-hidden={title ? undefined : "true"}
       aria-label={title}
-      className={`app-icon ${className}`}
+      className={`inline-block shrink-0 align-middle ${className}`}
       role={title ? "img" : undefined}
       style={style}
     />

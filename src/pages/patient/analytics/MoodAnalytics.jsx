@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import Card from "../../../components/common/Card.jsx";
+import { useEffect, useRef, useState } from "react";
 import Icon from "../../../components/common/Icon.jsx";
-import { Modal } from "../../../components/common/Modal.jsx";
 import { useToast } from "../../../components/common/Toast.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
 import { moodBars, moodInsights } from "../../../data/analyticsData.js";
 import { storage } from "../../../services/storage.js";
+import MoodCalendarModal from "./MoodCalendarModal.jsx";
+import MoodDaySpotlight from "./MoodDaySpotlight.jsx";
+import MoodSummaryCards from "./MoodSummaryCards.jsx";
+import MoodTrackerCard from "./MoodTrackerCard.jsx";
 
 const moodEmojis = ["\u{1F620}", "\u{1F622}", "\u{1F610}", "\u{1F60A}", "\u{1F60D}"];
 const moodLabels = ["Very low", "Low", "Balanced", "Good", "Excellent"];
@@ -30,13 +32,18 @@ const moodPattern = [4, 5, 3, 4, 2, 3, 4, 5, 4, 3, 2, 4, 5, 4, 3, 2, 3, 4, 5, 4,
 export default function MoodAnalytics() {
   const { showToast } = useToast();
   const { user } = useAuth();
+  const isHydratingRef = useRef(false);
   const [bars, setBars] = useState(moodBars);
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
   const todayDay = today.getDate();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [viewYear, setViewYear] = useState(currentYear);
+  const [viewMonth, setViewMonth] = useState(currentMonth);
+  const [modalSelectedDay, setModalSelectedDay] = useState(todayDay);
   const monthDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const monthLabel = today.toLocaleString("en-US", { month: "long" });
   const patientKey = user?.uid || user?.email || "guest-patient";
   const monthKey = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}`;
   const moodStorageKey = `patient_mood_calendar_${patientKey}_${monthKey}`;
@@ -50,11 +57,42 @@ export default function MoodAnalytics() {
     ? (recordedEntries.reduce((sum, item) => sum + item.mood, 0) / recordedEntries.length).toFixed(1)
     : "0.0";
   const positiveMoments = recordedEntries.filter((entry) => entry.mood >= 4).length;
-  const days = Array.from({ length: monthDays }, (_, index) => index + 1);
+  const days = getSevenDayStrip(monthEntries, selectedDay, monthDays);
   const selectedEntry = monthEntries.find((entry) => entry.day === selectedDay) || monthEntries[0];
   const currentStreak = calculateCurrentStreak(monthEntries, todayDay);
+  const viewMonthDays = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const viewMonthLabel = new Date(viewYear, viewMonth, 1).toLocaleString("en-US", { month: "long" });
+  const viewMonthKey = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}`;
+  const viewStorageKey = `patient_mood_calendar_${patientKey}_${viewMonthKey}`;
+  const isViewingCurrentMonth = viewYear === currentYear && viewMonth === currentMonth;
+  const viewTodayLimit = isViewingCurrentMonth ? todayDay : viewMonthDays;
+  const viewEntries = isViewingCurrentMonth
+    ? monthEntries
+    : hydrateMonthEntries(storage.get(viewStorageKey, null), viewMonthDays, viewTodayLimit);
+  const viewCalendarCells = createCalendarCells(viewEntries, new Date(viewYear, viewMonth, 1).getDay());
+  const modalSelectedEntry = viewEntries.find((entry) => entry.day === modalSelectedDay) || viewEntries[0];
+  const canGoNextMonth = viewYear < currentYear || (viewYear === currentYear && viewMonth < currentMonth);
 
   useEffect(() => {
+    isHydratingRef.current = true;
+    setMonthEntries(hydrateMonthEntries(storage.get(moodStorageKey, null), monthDays, todayDay));
+  }, [moodStorageKey, monthDays, todayDay]);
+
+  useEffect(() => {
+    setSelectedDay((currentDay) => Math.min(currentDay, todayDay, monthDays));
+  }, [monthDays, todayDay]);
+
+  useEffect(() => {
+    const nextEntry = monthEntries.find((entry) => entry.day === selectedDay);
+    setPendingMood(nextEntry?.recorded ? nextEntry.mood : null);
+  }, [monthEntries, selectedDay]);
+
+  useEffect(() => {
+    if (isHydratingRef.current) {
+      isHydratingRef.current = false;
+      return;
+    }
+
     storage.set(moodStorageKey, monthEntries);
   }, [monthEntries, moodStorageKey]);
 
@@ -71,10 +109,7 @@ export default function MoodAnalytics() {
       showToast("Wait until this day arrives to record your mood and continue your streak.");
       return;
     }
-
     setSelectedDay(day);
-    const nextEntry = monthEntries.find((entry) => entry.day === day);
-    setPendingMood(nextEntry?.recorded ? nextEntry.mood : null);
   }
 
   function recordMoodForDay() {
@@ -106,182 +141,139 @@ export default function MoodAnalytics() {
     showToast(`Mood saved for ${calendarLabels[new Date(currentYear, currentMonth, selectedDay).getDay()]} ${selectedDay}.`, "success");
   }
 
+  function getDayLabel(day) {
+    return calendarLabels[new Date(currentYear, currentMonth, day).getDay()];
+  }
+
+  function getViewDayLabel(day) {
+    return calendarLabels[new Date(viewYear, viewMonth, day).getDay()];
+  }
+
+  function openCalendar() {
+    setViewYear(currentYear);
+    setViewMonth(currentMonth);
+    setModalSelectedDay(selectedDay);
+    setIsCalendarOpen(true);
+  }
+
+  function changeViewMonth(direction) {
+    const next = new Date(viewYear, viewMonth + direction, 1);
+    const nextYear = next.getFullYear();
+    const nextMonth = next.getMonth();
+
+    if (nextYear > currentYear || (nextYear === currentYear && nextMonth > currentMonth)) {
+      return;
+    }
+
+    const nextMonthDays = new Date(nextYear, nextMonth + 1, 0).getDate();
+    setViewYear(nextYear);
+    setViewMonth(nextMonth);
+    setModalSelectedDay((day) => Math.min(day, nextMonthDays));
+  }
+
+  function handleSelectModalDay(day) {
+    if (day > viewTodayLimit) {
+      showToast("Wait until this day arrives to record your mood and continue your streak.");
+      return;
+    }
+
+    setModalSelectedDay(day);
+    if (isViewingCurrentMonth) {
+      setSelectedDay(day);
+    }
+  }
+
   return (
-    <div className="mood-analytics">
-      <div className="mood-calendar-head">
-        <div>
-          <h2>Mood Calendar</h2>
-          <small>Every daily check-in is grouped into one monthly snapshot.</small>
+    <div className="grid gap-5 p-6 sm:gap-6 sm:p-8">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="grid gap-1.5">
+          <h2 className="text-[2rem] font-medium leading-tight tracking-[-0.04em] text-slate-950">Mood Calendar</h2>
+          <small className="text-sm leading-6 text-slate-500 sm:text-[0.95rem]">Every daily check-in is grouped into one monthly snapshot.</small>
         </div>
-        <div className="analytics-pill-row">
-          <span><Icon name="flame" size={14} color="#f59e0b" />{currentStreak} day streak</span>
-          <button type="button" className="analytics-pill-button" onClick={() => setIsCalendarOpen(true)}>
-            <Icon name="calendar-days" size={14} color="#10b981" />
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
+          <span className="inline-flex min-h-12 items-center gap-3 rounded-full border border-slate-200 bg-white px-5 text-lg font-black text-slate-600 shadow-[0_10px_26px_rgba(15,23,42,0.06)]">
+            <Icon name="flame" size={24} color="#f59e0b" />
+            {currentStreak} day streak
+          </span>
+          <button
+            type="button"
+            className="inline-flex min-h-12 items-center gap-3 rounded-full border border-slate-200 bg-white px-5 text-lg font-black text-slate-600 shadow-[0_10px_26px_rgba(15,23,42,0.06)] transition hover:-translate-y-0.5 hover:border-slate-300"
+            onClick={openCalendar}
+          >
+            <Icon name="calendar-days" size={24} color="#10b981" />
             Open calendar
           </button>
         </div>
       </div>
-      {isCalendarOpen ? (
-        <Modal
-          title={`${today.toLocaleString("en-US", { month: "long" })} Mood Calendar`}
-          onClose={() => setIsCalendarOpen(false)}
-          actions={<button type="button" className="btn" onClick={() => setIsCalendarOpen(false)}>Done</button>}
-        >
-          <div className="mood-calendar-modal">
-            <section className="mood-calendar-summary">
-              <span className="mood-calendar-summary-badge" style={{ backgroundColor: `${moodColor(selectedEntry.mood)}1a`, color: moodColor(selectedEntry.mood) }}>
-                {selectedEntry.recorded ? `${selectedEntry.emoji} ${selectedEntry.label}` : "No mood recorded"}
-              </span>
-              <h3>{calendarLabels[new Date(currentYear, currentMonth, selectedEntry.day).getDay()]}, {today.toLocaleString("en-US", { month: "long" })} {selectedEntry.day}</h3>
-              <p>{selectedEntry.recorded ? selectedEntry.summary : "No check-in was recorded for this day. Missing days break the streak, and the next recorded day starts from 1 again."}</p>
-              <div className="mood-calendar-summary-grid">
-                <div>
-                  <small>Check-in time</small>
-                  <strong>{selectedEntry.recorded ? selectedEntry.checkInTime : "Not recorded"}</strong>
-                </div>
-                <div>
-                  <small>Mood score</small>
-                  <strong>{selectedEntry.recorded ? `${selectedEntry.mood}/5` : "-"}</strong>
-                </div>
-                <div>
-                  <small>Day highlight</small>
-                  <strong>{selectedEntry.recorded ? selectedEntry.highlight : "Record a mood to continue your progress."}</strong>
-                </div>
-              </div>
-              {selectedDay <= todayDay ? (
-                <div className="mood-record-panel">
-                  <div className="mood-record-head">
-                    <strong>Record this day</strong>
-                    <small>Select the emoji that matches how the patient felt, then save it to continue the streak.</small>
-                  </div>
-                  <div className="mood-record-row">
-                    {moodEmojis.map((emoji, index) => (
-                      <button
-                        type="button"
-                        className={`mood-record-button ${pendingMood === index + 1 ? "active" : ""}`.trim()}
-                        key={`${emoji}-${index}`}
-                        onClick={() => setPendingMood(index + 1)}
-                      >
-                        <span>{emoji}</span>
-                        <small>{moodLabels[index]}</small>
-                      </button>
-                    ))}
-                  </div>
-                  <button type="button" className="mood-record-cta" onClick={recordMoodForDay} disabled={!pendingMood}>
-                    {selectedEntry.recorded ? "Update mood and streak" : "Record mood and continue streak"}
-                  </button>
-                </div>
-              ) : null}
-            </section>
-
-            <section className="mood-calendar-panel">
-              <div className="mood-calendar-weekdays">
-                {calendarLabels.map((label) => <span key={label}>{label}</span>)}
-              </div>
-              <div className="mood-calendar-grid">
-                {calendarCells.map((entry, index) => {
-                  if (!entry) {
-                    return <span className="mood-calendar-cell placeholder" key={`placeholder-${index}`} aria-hidden="true" />;
-                  }
-
-                  const isToday = entry.day === todayDay;
-                  const isSelected = entry.day === selectedDay;
-                  const isFuture = entry.day > todayDay;
-
-                  return (
-                    <button
-                      type="button"
-                      aria-pressed={isSelected}
-                      className={`mood-calendar-cell ${isToday ? "today" : ""} ${isSelected ? "selected" : ""} ${isFuture ? "future" : ""}`.trim()}
-                      key={entry.day}
-                      onClick={() => handleSelectDay(entry.day)}
-                    >
-                      <small>{entry.day}</small>
-                      <strong>{isFuture || !entry.recorded ? "" : entry.emoji}</strong>
-                      <span>{isFuture ? "Coming soon" : entry.recorded ? entry.label : "Not recorded"}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          </div>
-        </Modal>
-      ) : null}
-      <div className="mood-calendar">
-        {days.map((day) => {
+      <MoodCalendarModal
+        calendarCells={viewCalendarCells}
+        calendarLabels={calendarLabels}
+        canGoNextMonth={canGoNextMonth}
+        canRecord={isViewingCurrentMonth && modalSelectedDay <= todayDay}
+        changeViewMonth={changeViewMonth}
+        getDayLabel={getViewDayLabel}
+        handleSelectDay={handleSelectModalDay}
+        isOpen={isCalendarOpen}
+        isViewingCurrentMonth={isViewingCurrentMonth}
+        monthLabel={viewMonthLabel}
+        moodColor={moodColor}
+        moodEmojis={moodEmojis}
+        moodLabels={moodLabels}
+        onClose={() => setIsCalendarOpen(false)}
+        pendingMood={pendingMood}
+        recordMoodForDay={recordMoodForDay}
+        selectedDay={modalSelectedDay}
+        selectedEntry={modalSelectedEntry}
+        setPendingMood={setPendingMood}
+        todayDay={viewTodayLimit}
+        viewYear={viewYear}
+      />
+      <div className="grid auto-cols-[72px] grid-flow-col gap-2 overflow-x-auto pb-1 sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-7">
+        {days.map((dayEntry) => {
+          const day = dayEntry.day;
           const isToday = day === todayDay;
           const isSelected = day === selectedDay;
           const isFuture = day > todayDay;
-          const dayEntry = monthEntries.find((entry) => entry.day === day);
           return (
             <button
               type="button"
               aria-pressed={isSelected}
-              className={`${isToday ? "today" : ""} ${isSelected ? "selected" : ""} ${isFuture ? "future" : ""}`.trim()}
+              className={`grid min-w-[72px] gap-2 rounded-[1.25rem] border px-3 py-3 text-center transition ${
+                isSelected
+                  ? "border-violet-300 bg-violet-50 shadow-sm shadow-violet-900/10"
+                  : isToday
+                    ? "border-violet-200 bg-white"
+                    : "border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]"
+              } ${isFuture ? "text-slate-300" : "text-slate-600"}`}
               key={day}
               onClick={() => handleSelectDay(day)}
             >
-              <small>{calendarLabels[new Date(currentYear, currentMonth, day).getDay()]}</small>
-              <strong>{day}</strong>
-              <span>{isFuture || !dayEntry?.recorded ? "" : dayEntry.emoji}</span>
+              <small className="text-xs font-black uppercase tracking-[0.14em]">{getDayLabel(day)}</small>
+              <strong className={`text-lg font-bold ${isToday ? "text-[var(--primary)]" : ""}`}>{day}</strong>
+              <span className={`text-lg ${isFuture ? "opacity-25" : ""}`}>{isFuture || !dayEntry?.recorded ? "" : dayEntry.emoji}</span>
             </button>
           );
         })}
       </div>
-      <div className="mood-day-spotlight">
-        <div className="mood-day-spotlight-header">
-          <span className="mood-day-spotlight-emoji">{selectedEntry.recorded ? selectedEntry.emoji : "\u{1F4DD}"}</span>
-          <div>
-            <strong>{calendarLabels[new Date(currentYear, currentMonth, selectedDay).getDay()]} {selectedDay}</strong>
-            <small>{selectedEntry.recorded ? `${selectedEntry.label} mood recorded at ${selectedEntry.checkInTime}` : "No mood recorded for this day yet"}</small>
-          </div>
-        </div>
-        <p>{selectedEntry.recorded ? selectedEntry.summary : "This day does not have a mood check-in yet. Recording today keeps your streak moving, but missing days resets it."}</p>
-        <em>{selectedEntry.recorded ? selectedEntry.highlight : "Record this day to build your streak from here."}</em>
-      </div>
-      <div className="mood-summary-row">
-        <div className="mood-summary-card">
-          <small>Average mood</small>
-          <strong>{averageMood}/5</strong>
-        </div>
-        <div className="mood-summary-card">
-          <small>Positive check-ins</small>
-          <strong>{positiveMoments}/{recordedEntries.length || 0}</strong>
-        </div>
-        <div className="mood-summary-card">
-          <small>Current streak</small>
-          <strong>{currentStreak} day{currentStreak === 1 ? "" : "s"}</strong>
-        </div>
-      </div>
-      <Card className="mood-tracker-card">
-        <div className="card-title-row">
-          <span><h2>Mood Tracker</h2><small>Track your emotional patterns</small></span>
-          <span className="soft-tag" style={{ color: "#10b981", backgroundColor: "rgba(16,185,129,0.12)" }}>Weekly view</span>
-        </div>
-        <h3>Interactive Mood Chart</h3>
-        <p className="analytics-card-note">Tap any mood bar to preview how another emotional state would appear on the chart.</p>
-        <div className="mood-bars">
-          {bars.map((bar, index) => (
-            <button type="button" key={bar.time} aria-label={`${bar.time}, mood ${moodLabels[bar.mood - 1]}. Tap to cycle mood preview.`} onClick={() => cycle(index)}>
-              <small>{bar.time}</small>
-              <span className="mood-bar-track">
-                <span className="mood-bar-fill" style={{ height: `${bar.mood * 20}%`, backgroundColor: moodColor(bar.mood) }} />
-                <em style={{ bottom: `calc(${bar.mood * 20}% - 16px)` }}>{bar.emoji}</em>
-              </span>
-            </button>
-          ))}
-        </div>
-        <h3>Mood Insights</h3>
-        <ul className="insight-list">
-          {moodInsights.map((insight) => <li key={insight}>{insight}</li>)}
-        </ul>
-      </Card>
+      <MoodDaySpotlight getDayLabel={getDayLabel} monthLabel={monthLabel} selectedDay={selectedDay} selectedEntry={selectedEntry} />
+      <MoodSummaryCards
+        averageMood={averageMood}
+        currentStreak={currentStreak}
+        positiveMoments={positiveMoments}
+        recordedCount={recordedEntries.length || 0}
+      />
+      <MoodTrackerCard bars={bars} cycle={cycle} moodColor={moodColor} moodInsights={moodInsights} moodLabels={moodLabels} />
     </div>
   );
 }
 
 function moodColor(mood) {
   return ["#ef4444", "#f59e0b", "#6b7280", "#10b981", "#3b82f6"][mood - 1] || "#6b7280";
+}
+
+function getSevenDayStrip(entries, selectedDay, daysInMonth) {
+  const start = Math.min(Math.max(1, selectedDay - 3), Math.max(1, daysInMonth - 6));
+  return entries.slice(start - 1, start + 6);
 }
 
 function createMonthEntries(daysInMonth, todayDay) {
